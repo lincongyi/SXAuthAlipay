@@ -15,6 +15,7 @@
             name="用户名"
             label="用户名"
             placeholder="用户名"
+            readonly
             clearable
             maxlength="18"
             :rules="[{ required: true, message: '请填写用户名' }]"
@@ -83,7 +84,7 @@
 </template>
 
 <script setup>
-import {checkIdentityInfo, getBeforeAuthTips, alipayAuthInit, alipayAuthQuery} from '@/api/auth/index'
+import { checkIdentityInfo, getBeforeAuthTips, alipayAuthInit, alipayAuthQuery} from '@/api/auth/index'
 import { Toast, Dialog } from 'vant'
 import { hideCode, getImageUrl } from '@/utils/index'
 
