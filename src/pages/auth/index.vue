@@ -63,7 +63,7 @@
       </div>
     </van-form>
   </div>
-  <van-action-sheet v-model:show="isActionSheetShow" title="认证授权">
+  <van-action-sheet v-model:show="isActionSheetShow" title="认证授权111">
     <div class="content">
       <div class="upper-tips" v-html="beforeAuth"></div>
       <van-divider />
