@@ -162,7 +162,6 @@ const handleSubmit = () => {
 }
 
 const toAuthorize = async() => {
-  console.log(123123)
   if (!isChecked.value) return Toast('请同意《服务协议》')
   // 获取调起支付宝刷脸url
   let {data} = await alipayAuthInit({certToken, fullName: fullName.value, idNum: idNum.value})
@@ -170,9 +169,7 @@ const toAuthorize = async() => {
   certifyUrl.value = data.certifyUrl
   isActionSheetShow.value = false
   isChecked.value = false
-  // AuthProcess(certifyId.value, certifyUrl.value)
-
-
+  AuthProcess(certifyId.value, certifyUrl.value)
 }
 
 // 由于业务逻辑改动。这块暂时用不到了。
@@ -180,15 +177,15 @@ const AuthProcess = (certifyId, url) => {
   /**
     * 支付宝H5页面接入逻辑代码 start
    */
+  console.log(window.AlipayJSBridge)
   function ready( callback ) {
     // 如果jsbridge已经注入则直接调用
-    console.log(window.AlipayJSBridge)
-    // if ( window.AlipayJSBridge ) {
-    //   callback && callback()
-    // } else {
-    //   // 如果没有注入则监听注入的事件
-    //   document.addEventListener( 'AlipayJSBridgeReady', callback, false )
-    // }
+    if ( window.AlipayJSBridge ) {
+      callback && callback()
+    } else {
+      // 如果没有注入则监听注入的事件
+      document.addEventListener( 'AlipayJSBridgeReady', callback, false )
+    }
   }
   // startBizService 接口仅在支付宝 10.0.15 及以上支持
   // 需要接入者自行做下版本兼容处理 ！！
@@ -203,25 +200,25 @@ const AuthProcess = (certifyId, url) => {
   * 参数: certifyId、url 需要通过支付宝 openapi 开放平台网关接口获取
   * 详细说明可查看文档下方的参数说明
   **/
-  ready ( function () {
-    // 需要确保在 AlipayJSBridge ready 之后才调用
-    startAPVerify ({
-      certifyId,
-      url,
-    }, async ( verifyResult ) => {
-      if (!verifyResult.result){
-        toCancelAuthorize()
-      } else {
-        // 认证结果回调触发, 以下处理逻辑为示例代码，开发者可根据自身业务特性来自行处理
-        // 验证成功，接入方在此处处理后续的业务逻辑
-        Toast(verifyResult.resultStatus === '9000'?'认证通过':'认证失败')
-        let {data} = await alipayAuthQuery({loginToken, certToken, fullName: fullName.value, idNum: idNum.value, certifyId: verifyResult.result.certifyId})
-        setTimeout(() => {
-          window.location.replace(data.foreBackUrl)
-        }, 1000)
-      }
-    })
-  })
+  // ready ( function () {
+  //   // 需要确保在 AlipayJSBridge ready 之后才调用
+  //   startAPVerify ({
+  //     certifyId,
+  //     url,
+  //   }, async ( verifyResult ) => {
+  //     if (!verifyResult.result){
+  //       toCancelAuthorize()
+  //     } else {
+  //       // 认证结果回调触发, 以下处理逻辑为示例代码，开发者可根据自身业务特性来自行处理
+  //       // 验证成功，接入方在此处处理后续的业务逻辑
+  //       Toast(verifyResult.resultStatus === '9000'?'认证通过':'认证失败')
+  //       let {data} = await alipayAuthQuery({loginToken, certToken, fullName: fullName.value, idNum: idNum.value, certifyId: verifyResult.result.certifyId})
+  //       setTimeout(() => {
+  //         window.location.replace(data.foreBackUrl)
+  //       }, 1000)
+  //     }
+  //   })
+  // })
   /**
     * 支付宝H5页面接入逻辑代码 end
    */
