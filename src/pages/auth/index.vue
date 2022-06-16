@@ -76,8 +76,8 @@
         </p>
       </div>
       <div class="btn-group">
-        <van-button square plain type="primary" class="authorize-btn to-cancel-authorize-btn" @click="toCancelAuthorize">取消授权1</van-button>
-        <van-button square type="primary" :class="['to-authorize-btn', 'authorize-btn', {'active':isChecked}]" @click="toAuthorize">确认授权2</van-button>
+        <van-button square plain type="primary" class="authorize-btn to-cancel-authorize-btn" @click="toCancelAuthorize">取消授权</van-button>
+        <van-button square type="primary" :class="['to-authorize-btn', 'authorize-btn', {'active':isChecked}]" @click="toAuthorize">确认授权</van-button>
       </div>
     </div>
   </van-action-sheet>
