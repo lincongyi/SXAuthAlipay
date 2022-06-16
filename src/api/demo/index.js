@@ -16,7 +16,8 @@ export function getAccessToken(params) {
  */
 export function getCertToken(data) {
   return request({
-    baseURL: process.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_DEMO_BASE_URL,
+    // baseURL: process.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : import.meta.env.VITE_DEMO_BASE_URL,
+    baseURL: import.meta.env.VITE_DEMO_BASE_URL,
     url: '/authreq',
     method: 'post',
     data
