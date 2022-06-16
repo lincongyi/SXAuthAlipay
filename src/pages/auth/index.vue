@@ -182,13 +182,13 @@ const AuthProcess = (certifyId, url) => {
    */
   function ready( callback ) {
     // 如果jsbridge已经注入则直接调用
-    if ( window.AlipayJSBridge ) {
-      console.log(window.AlipayJSBridge)
-      // callback && callback()
-    } else {
-      // 如果没有注入则监听注入的事件
-      document.addEventListener( 'AlipayJSBridgeReady', callback, false )
-    }
+    console.log(window.AlipayJSBridge)
+    // if ( window.AlipayJSBridge ) {
+    //   callback && callback()
+    // } else {
+    //   // 如果没有注入则监听注入的事件
+    //   document.addEventListener( 'AlipayJSBridgeReady', callback, false )
+    // }
   }
   // startBizService 接口仅在支付宝 10.0.15 及以上支持
   // 需要接入者自行做下版本兼容处理 ！！
