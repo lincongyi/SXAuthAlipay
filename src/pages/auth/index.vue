@@ -162,6 +162,7 @@ const handleSubmit = () => {
 }
 
 const toAuthorize = async() => {
+  console.log(123123)
   if (!isChecked.value) return Toast('请同意《服务协议》')
   // 获取调起支付宝刷脸url
   let {data} = await alipayAuthInit({certToken, fullName: fullName.value, idNum: idNum.value})
@@ -169,14 +170,21 @@ const toAuthorize = async() => {
   certifyUrl.value = data.certifyUrl
   isActionSheetShow.value = false
   isChecked.value = false
+  // AuthProcess(certifyId.value, certifyUrl.value)
 
+
+}
+
+// 由于业务逻辑改动。这块暂时用不到了。
+const AuthProcess = (certifyId, url) => {
   /**
     * 支付宝H5页面接入逻辑代码 start
    */
   function ready( callback ) {
     // 如果jsbridge已经注入则直接调用
     if ( window.AlipayJSBridge ) {
-      callback && callback()
+      console.log(window.AlipayJSBridge)
+      // callback && callback()
     } else {
       // 如果没有注入则监听注入的事件
       document.addEventListener( 'AlipayJSBridgeReady', callback, false )
@@ -198,20 +206,15 @@ const toAuthorize = async() => {
   ready ( function () {
     // 需要确保在 AlipayJSBridge ready 之后才调用
     startAPVerify ({
-      certifyId: certifyId.value,
-      url: certifyUrl.value
+      certifyId,
+      url,
     }, async ( verifyResult ) => {
       if (!verifyResult.result){
         toCancelAuthorize()
       } else {
         // 认证结果回调触发, 以下处理逻辑为示例代码，开发者可根据自身业务特性来自行处理
-        if ( verifyResult.resultStatus === '9000' ) {
-          // 验证成功，接入方在此处处理后续的业务逻辑
-          Toast('认证通过')
-        }
-        else {
-          Toast('认证失败')
-        }
+        // 验证成功，接入方在此处处理后续的业务逻辑
+        Toast(verifyResult.resultStatus === '9000'?'认证通过':'认证失败')
         let {data} = await alipayAuthQuery({loginToken, certToken, fullName: fullName.value, idNum: idNum.value, certifyId: verifyResult.result.certifyId})
         setTimeout(() => {
           window.location.replace(data.foreBackUrl)
