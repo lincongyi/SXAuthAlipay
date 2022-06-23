@@ -172,7 +172,8 @@ const toAuthorize = async() => {
   AuthProcess(certifyId.value, certifyUrl.value)
 }
 
-// 由于业务逻辑改动。这块暂时用不到了。
+// 身份认证文档
+// https://opendocs.alipay.com/mini/02osif
 const AuthProcess = (certifyId, url) => {
   /**
     * 支付宝H5页面接入逻辑代码 start
