@@ -11,6 +11,7 @@
     <template v-for="(item,index) in authResultStep" :key="index">
       <div :class="['step',['failed','successful'][item.value]]">{{item.key}}</div>
     </template>
+    <van-button type="primary" block @click="handleBack">返回</van-button>
   </div>
 </template>
 
@@ -72,6 +73,14 @@ const authResult = computed(() => {
   }
 })
 
+const backUrl = ref('')
+
+// 返回第三方h5页面
+const handleBack = () => {
+  if (!backUrl.value) return
+  window.location.href = backUrl.value
+}
+
 onMounted(() => {
   // let query = window.location.href.substring(window.location.href.indexOf('?')+1)
   let query = 'mode=66&data=00XX'
@@ -79,9 +88,6 @@ onMounted(() => {
     Dialog.alert({
       message: '路径参数有错，请重新获取'
     })
-    setTimeout(() => {
-      window.history.go(-1)
-    }, 1500)
   }
   const queryArr = query.split('&')
   authMode.value = Number(queryArr[0].replace(/mode=/g, ''))

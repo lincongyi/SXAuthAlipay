@@ -178,7 +178,6 @@ const AuthProcess = (certifyId, url) => {
   /**
     * 支付宝H5页面接入逻辑代码 start
    */
-  console.log(window.AlipayJSBridge)
   function ready( callback ) {
     // 如果jsbridge已经注入则直接调用
     if ( window.AlipayJSBridge ) {
