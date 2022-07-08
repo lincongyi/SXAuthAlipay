@@ -80,7 +80,7 @@ const handleSubmit = async () => {
   let {certToken} = tokenInfo
 
   // let url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
-  let url = `/toMiniProgram.html?certToken=${certToken}`
+  let url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/toMiniProgram.html?certToken=${certToken}`
   window.location.replace(url)
 }
 </script>
