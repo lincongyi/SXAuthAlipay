@@ -25,7 +25,6 @@ export default ({mode}) =>
         entry: [
           path.resolve('src/pages/demo/main.js'),
           path.resolve('src/pages/auth/main.js'),
-          path.resolve('src/pages/toMiniProgram/main.js'),
           path.resolve('src/pages/authResult/main.js'),
         ], // entry for each page, different from the above
         localEnabled: mode === 'development',
@@ -57,6 +56,8 @@ export default ({mode}) =>
           index: path.resolve(__dirname, 'index.html'),
           demo: path.resolve(__dirname, 'demo.html'),
           auth: path.resolve(__dirname, 'auth.html'),
+          toMiniProgram: path.resolve(__dirname, 'toMiniProgram.html'),
+          authResult: path.resolve(__dirname, 'authResult.html'),
         }
       },
     },
