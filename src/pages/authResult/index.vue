@@ -83,6 +83,7 @@ const handleBack = () => {
 
 onMounted(() => {
   // let query = window.location.href.substring(window.location.href.indexOf('?')+1)
+  console.log(window.location.href.substring(window.location.href.indexOf('?')+1))
   let query = 'mode=66&data=00XX'
   if (!query.includes('&')){
     Dialog.alert({

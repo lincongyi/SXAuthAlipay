@@ -54,8 +54,8 @@ import {getAccessToken, getCertToken} from '@/api/demo/index'
 const clientId = ref(import.meta.env.VITE_CLIENT_ID) || ref('') // 账号
 const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) || ref('') // 密码
 const mode = ref(66) // 认证模式
-const username = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 姓名
-const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 证件号码
+const username = process.env.NODE_ENV === 'production' ? ref('') : ref('林聪毅') // 姓名
+const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('440105199203182415') // 证件号码
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
@@ -79,7 +79,8 @@ const handleSubmit = async () => {
   let {tokenInfo} = await getCertToken(params)
   let {certToken} = tokenInfo
 
-  let url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+  // let url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+  let url = `/toMiniProgram.html?certToken=${certToken}`
   window.location.replace(url)
 }
 </script>
