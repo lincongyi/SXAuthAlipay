@@ -24,7 +24,9 @@ export default ({mode}) =>
       viteVConsole({
         entry: [
           path.resolve('src/pages/demo/main.js'),
-          path.resolve('src/pages/auth/main.js')
+          path.resolve('src/pages/auth/main.js'),
+          path.resolve('src/pages/toMiniProgram/main.js'),
+          path.resolve('src/pages/authResult/main.js'),
         ], // entry for each page, different from the above
         localEnabled: mode === 'development',
         enabled: mode === 'development',
