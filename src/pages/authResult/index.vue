@@ -88,7 +88,7 @@ onMounted(() => {
   const authParams = query.substring(0, query.indexOf('&foreBackUrl'))
   const authParamsArr = authParams.split('&')
   authMode.value = Number(authParamsArr[0].replace(/mode=/g, ''))
-  authData.value = authParamsArr[1].replace(/resstr=/g, '')
+  authData.value = authParamsArr[1].replace(/resStr=/g, '')
 
   foreBackUrl.value = query.substring(query.indexOf('foreBackUrl')).replace(/foreBackUrl=/g, '')
 })
