@@ -73,7 +73,7 @@ const authResult = computed(() => {
   }
 })
 
-const authForeBackUrl = ref('') //
+const authForeBackUrl = ref('') // 第三方h5页面url
 
 // 返回第三方h5页面
 const handleBack = () => {
