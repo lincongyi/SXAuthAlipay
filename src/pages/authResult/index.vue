@@ -73,27 +73,24 @@ const authResult = computed(() => {
   }
 })
 
-const authForeBackUrl = ref('') // 第三方h5页面url
+const foreBackUrl = ref('') // 第三方h5页面url
 
 // 返回第三方h5页面
 const handleBack = () => {
-  if (!authForeBackUrl.value) return
-  window.location.href = authForeBackUrl.value
+  if (!foreBackUrl.value) return
+  window.location.href = foreBackUrl.value
 }
 
 onMounted(() => {
-  // let query = window.location.href.substring(window.location.href.indexOf('?')+1)
-  console.log(window.location.href.substring(window.location.href.indexOf('?')+1))
-  let query = 'mode=66&resstr=00XX&foreBackUrl=https://www.baidu.com'
-  if (!query.includes('&')){
-    Dialog.alert({
-      message: '路径参数有错，请重新获取'
-    })
-  }
-  const queryArr = query.split('&')
-  authMode.value = Number(queryArr[0].replace(/mode=/g, ''))
-  authData.value = queryArr[1].replace(/resstr=/g, '')
-  authForeBackUrl.value = queryArr[2].replace(/foreBackUrl=/g, '')
+  let query = window.location.href.substring(window.location.href.indexOf('?')+1)
+  if (!query.includes('&')) return Dialog.alert({ message: '路径参数有错，请重新获取' })
+
+  const authParams = query.substring(0, query.indexOf('&foreBackUrl'))
+  const authParamsArr = authParams.split('&')
+  authMode.value = Number(authParamsArr[0].replace(/mode=/g, ''))
+  authData.value = authParamsArr[1].replace(/resstr=/g, '')
+
+  foreBackUrl.value = query.substring(query.indexOf('foreBackUrl')).replace(/foreBackUrl=/g, '')
 })
 </script>
 
