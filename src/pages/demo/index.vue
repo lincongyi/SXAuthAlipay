@@ -42,6 +42,10 @@
           placeholder="证件号码"
         />
       </van-cell-group>
+      <van-radio-group class="radio-box" v-model="authModeChecked" direction="horizontal">
+        <van-radio name="H5">公众号or生活号</van-radio>
+        <van-radio name="MINI">MINI PROGRAM</van-radio>
+      </van-radio-group>
       <div style="margin: 16px;">
         <van-button round block type="primary" native-type="submit">提交</van-button>
       </div>
@@ -54,8 +58,9 @@ import {getAccessToken, getCertToken} from '@/api/demo/index'
 const clientId = ref(import.meta.env.VITE_CLIENT_ID) || ref('') // 账号
 const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) || ref('') // 密码
 const mode = ref(66) // 认证模式
-const username = process.env.NODE_ENV === 'production' ? ref('') : ref('林聪毅') // 姓名
-const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('440105199203182415') // 证件号码
+const username = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 姓名
+const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 证件号码
+const authModeChecked = ref('MINI') // 选择跳转目的地:h5（生活号公众号） or mini（小程序）
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
@@ -79,8 +84,10 @@ const handleSubmit = async () => {
   let {tokenInfo} = await getCertToken(params)
   let {certToken} = tokenInfo
 
-  // let url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
-  let url = `https://sfrz.shxga.gov.cn/auth/sxauthalipay/toMiniProgram.html?certToken=${certToken}`
+  let env = authModeChecked.value || 'MINI'
+
+  // let url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}` // 跳转生活号
+  let url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'http://gat.shaanxi.gov.cn/auth'}/authgzh/auth2?certToken=${certToken}&env=${env}`
   window.location.replace(url)
 }
 </script>
@@ -96,5 +103,8 @@ const handleSubmit = async () => {
 }
 h1{
   text-align: center;
+}
+.radio-box{
+  padding: 10px 30px
 }
 </style>

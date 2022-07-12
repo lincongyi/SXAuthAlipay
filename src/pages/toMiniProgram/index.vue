@@ -25,10 +25,22 @@ if (!navigatorMode){
   })
 } else {
   // 跳转到小程序
-  const certToken = window.location.href.substring(window.location.href.indexOf('?')+1)
-  const encodeCertToken = encodeURIComponent(certToken)
-  const scheme = encodeURIComponent(`alipays://platformapi/startapp?appId=2021003128635520&page=pages/login/index&query=${encodeCertToken}`)
-  window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
+  let href = decodeURIComponent(window.location.href)
+  let query = href.substring(window.location.href.indexOf('?')+1)
+  let queryArr = query.split('&')
+  let certToken = queryArr[0].replace(/certToken=/g, '')
+  let env = queryArr[1].replace(/env=/g, '')
+
+
+  if (navigatorMode === 1){ // 跳转微信小程序
+
+  } else { // 跳转支付宝小程序
+    let schemeQuery = `certToken=${certToken}&env=${env}`
+    const encodeSchemeQuery = encodeURIComponent(schemeQuery)
+    const baseScheme = 'alipays://platformapi/startapp?appId=2021003128635520&page=pages/login/index'
+    const scheme = encodeURIComponent(`${baseScheme}&query=${encodeSchemeQuery}`)
+    window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
+  }
 }
 </script>
 

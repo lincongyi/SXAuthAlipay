@@ -1,8 +1,6 @@
 <template>
-  <h1>PAGE AUTHRESULT</h1>
   <div class="container">
     <div class="auth-result">
-      <!-- <image class="result-image" mode="widthFix" :src="resultList[authResult].resultImage"/> -->
       <van-image class="result-image" :src="resultList[authResult].resultImage">
         <template v-slot:error>加载失败</template>
       </van-image>
@@ -11,7 +9,9 @@
     <template v-for="(item,index) in authResultStep" :key="index">
       <div :class="['step',['failed','successful'][item.value]]">{{item.key}}</div>
     </template>
-    <van-button type="primary" block @click="handleBack">返回</van-button>
+    <div class="btn-wrap">
+      <van-button type="primary" block @click="handleBack">返回</van-button>
+    </div>
   </div>
 </template>
 
@@ -73,18 +73,18 @@ const authResult = computed(() => {
   }
 })
 
-const backUrl = ref('')
+const authForeBackUrl = ref('') //
 
 // 返回第三方h5页面
 const handleBack = () => {
-  if (!backUrl.value) return
-  window.location.href = backUrl.value
+  if (!authForeBackUrl.value) return
+  window.location.href = authForeBackUrl.value
 }
 
 onMounted(() => {
   // let query = window.location.href.substring(window.location.href.indexOf('?')+1)
   console.log(window.location.href.substring(window.location.href.indexOf('?')+1))
-  let query = 'mode=66&data=00XX'
+  let query = 'mode=66&resstr=00XX&foreBackUrl=https://www.baidu.com'
   if (!query.includes('&')){
     Dialog.alert({
       message: '路径参数有错，请重新获取'
@@ -92,7 +92,8 @@ onMounted(() => {
   }
   const queryArr = query.split('&')
   authMode.value = Number(queryArr[0].replace(/mode=/g, ''))
-  authData.value = queryArr[1].replace(/data=/g, '')
+  authData.value = queryArr[1].replace(/resstr=/g, '')
+  authForeBackUrl.value = queryArr[2].replace(/foreBackUrl=/g, '')
 })
 </script>
 
@@ -107,7 +108,7 @@ onMounted(() => {
 }
 
 .auth-result {
-  margin: 80px 0;
+  margin: 40px 0;
   text-align: center;
 
   .result-image {
@@ -124,12 +125,12 @@ onMounted(() => {
 }
 
 .step {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   text-align: center;
 
   &::before {
     display: inline-block;
-    margin-right: 16px;
+    margin-right: 8px;
     width: 28px;
     height: 28px;
     background-size: contain;
@@ -148,9 +149,8 @@ onMounted(() => {
   }
 }
 
-.btn-warp {
-  margin: 0 50px;
-  margin-top: 100px;
+.btn-wrap {
+  margin: 60px 40px;
 }
 
 </style>
