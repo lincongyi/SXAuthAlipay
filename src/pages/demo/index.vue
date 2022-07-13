@@ -56,8 +56,8 @@
 
 <script setup>
 import {getAccessToken, getCertToken} from '@/api/demo/index'
-const clientId = ref(import.meta.env.VITE_CLIENT_ID) || ref('') // 账号
-const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) || ref('') // 密码
+const clientId = ref(import.meta.env.VITE_CLIENT_ID) // 账号
+const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) // 密码
 const mode = ref(66) // 认证模式
 const username = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 姓名
 const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 证件号码
