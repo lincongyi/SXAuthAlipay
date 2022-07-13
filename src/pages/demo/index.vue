@@ -42,10 +42,14 @@
           placeholder="证件号码"
         />
       </van-cell-group>
-      <van-radio-group class="radio-box" v-model="authModeChecked" direction="horizontal">
-        <!-- <van-radio name="H5">公众号or生活号</van-radio> -->
-        <van-radio name='0'>生活号</van-radio>
-        <van-radio name='1'>MINI PROGRAM</van-radio>
+      <van-radio-group class="radio-box" v-model="authModeChecked">
+        <div class="radio-title">直接跳转</div>
+        <van-radio name="0">生活号</van-radio>
+
+        <div class="radio-title">跳转空白页面后重定向</div>
+        <van-radio name="1">公众号or生活号</van-radio>
+        <van-radio name="2">MINI PROGRAM</van-radio>
+
       </van-radio-group>
       <div style="margin: 16px;">
         <van-button round block type="primary" native-type="submit">提交</van-button>
@@ -61,8 +65,8 @@ const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) // 密码
 const mode = ref(66) // 认证模式
 const username = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 姓名
 const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 证件号码
-const authMode = ['H5', 'MINI'] // h5（生活号公众号） or mini（小程序）
-const authModeChecked = ref('1') // 选择跳转目的地
+const authModeList = ['H5', 'MINI'] // h5（生活号公众号） or mini（小程序）
+const authModeChecked = ref('2') // 选择跳转目的地
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
@@ -86,11 +90,12 @@ const handleSubmit = async () => {
   let {tokenInfo} = await getCertToken(params)
   let {certToken} = tokenInfo
 
-  let env = authMode[Number(authModeChecked.value)] || 'MINI'
+  let target = Number(authModeChecked.value)
   let url
-  if (Number(authModeChecked.value)){ // 跳转小程序
+  if (target){
+    let env = authModeList[target-1]
     url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'http://gat.shaanxi.gov.cn/auth'}/authgzh/auth2?certToken=${certToken}&env=${env}`
-  } else { // 跳转生活号
+  } else {
     url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
   }
   window.location.replace(url)
@@ -112,5 +117,13 @@ h1{
 }
 .radio-box{
   padding: 10px 30px
+}
+.radio-title{
+  font-size: 14px;
+  color: #666;
+  padding: 10px 0;
+}
+.van-radio{
+  padding: 10px 0;
 }
 </style>
