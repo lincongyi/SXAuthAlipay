@@ -89,7 +89,7 @@ const handleSubmit = async () => {
   let env = authMode[Number(authModeChecked.value)] || 'MINI'
   let url
   if (Number(authModeChecked.value)){ // 跳转小程序
-    url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'http://gat.shaanxi.gov.cn/auth'}/authgzh/auth2?certToken=${certToken}&env=${env}`
+    url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'https://sfrz.shxga.gov.cn/auth'}/authgzh/auth2?certToken=${certToken}&env=${env}`
   } else { // 跳转生活号
     url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
   }
