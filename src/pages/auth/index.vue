@@ -16,16 +16,14 @@
             label="用户名"
             placeholder="用户名"
             readonly
-            clearable
             maxlength="18"
-            :rules="[{ required: true, message: '请填写用户名' }]"
           />
         </template>
         <template v-else>
           <van-field
             v-model="fullName"
             name="用户名"
-            label="用户名"
+            label="用户名1111"
             placeholder="用户名"
             clearable
             maxlength="18"
