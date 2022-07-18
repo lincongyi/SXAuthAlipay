@@ -23,7 +23,7 @@
           <van-field
             v-model="fullName"
             name="用户名"
-            label="用户名1111"
+            label="用户名"
             placeholder="用户名"
             clearable
             maxlength="18"
