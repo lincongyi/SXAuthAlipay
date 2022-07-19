@@ -98,8 +98,8 @@ const isActionSheetShow = ref(false) // 控制认证授权底部弹出框显示�
 const isChecked = ref(false) // 是否同意身份核验
 const isFilled = computed(() => fullName.value && idNum.value) // 用户名和证件号都填好才能提交
 
-const query = window.location.href.substring(window.location.href.indexOf('?')+1)
-if (!query.includes('&')){
+let url = window.location.href
+if (!url.includes('&')){
   Dialog.alert({
     message: '路径参数有错，请重新获取'
   })
@@ -107,10 +107,11 @@ if (!query.includes('&')){
     window.history.go(-1)
   }, 1500)
 }
+const query = url.substring(url.indexOf('?')+1)
 
-const queryArr = query.split('&')
-const loginToken = queryArr[0].replace(/loginToken=/g, '')
-const certToken = queryArr[1].replace(/certToken=/g, '')
+const urlParams = new URLSearchParams(query)
+const loginToken = urlParams.get('loginToken') || ''
+const certToken = urlParams.get('certToken') || ''
 
 const beforeAuth = ref('')
 const beforeProtocol = ref('')
