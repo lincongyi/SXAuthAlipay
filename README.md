@@ -12,6 +12,8 @@ https://sfrz.shxga.gov.cn/sxauthalipay/demo.html
 
 /authResult 认证结果
 
+/authTask 实人认证二维码demo
+
 ## appid
 2021003128653310
 

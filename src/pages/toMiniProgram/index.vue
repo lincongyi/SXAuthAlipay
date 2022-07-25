@@ -1,5 +1,4 @@
 <template>
-  <h1>PAGE TOMINIPROGRAM</h1>
   <div class="loading-wrap">
     <van-loading color="#0094ff" size="40px" vertical>加载中...</van-loading>
   </div>
@@ -27,9 +26,11 @@ if (!navigatorMode){
   // 跳转到小程序
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(window.location.href.indexOf('?')+1)
-  let queryArr = query.split('&')
-  let certToken = queryArr[0].replace(/certToken=/g, '')
-  let env = queryArr[1].replace(/env=/g, '')
+
+  const urlParams = new URLSearchParams(query)
+  const env = urlParams.get('env') || ''
+  const certToken = urlParams.get('certToken') || ''
+
   let authModeList = ['H5', 'MINI']
   let authMode = authModeList.findIndex((item) => item===env)
 

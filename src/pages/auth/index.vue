@@ -1,5 +1,4 @@
 <template>
-  <!-- <h1>PAGE AUTH</h1> -->
   <div class="form-wrap">
     <van-form @submit="handleSubmit">
       <van-cell-group inset>

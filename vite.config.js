@@ -58,6 +58,7 @@ export default ({mode}) =>
           auth: path.resolve(__dirname, 'auth.html'),
           toMiniProgram: path.resolve(__dirname, 'toMiniProgram.html'),
           authResult: path.resolve(__dirname, 'authResult.html'),
+          authTask: path.resolve(__dirname, 'authTask.html'),
         }
       },
     },
