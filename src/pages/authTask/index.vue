@@ -66,7 +66,7 @@
               <div class="cell-value">{{userData.phone}}</div>
             </div>
             <div class="cell">
-              <div class="cell-title">微警凭证号码：</div>
+              <div class="cell-title">网证标识：</div>
               <div class="cell-value"></div>
             </div>
           </div>
@@ -77,7 +77,7 @@
             <div class="card-title">认证信息</div>
             <div class="cell">
               <div class="cell-title">认证平台：</div>
-              <div class="cell-value">广州南沙示范基地</div>
+              <div class="cell-value">陕西省实人认证平台</div>
             </div>
             <div class="cell">
               <div class="cell-title">认证模式：</div>
