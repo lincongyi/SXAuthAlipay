@@ -93,7 +93,7 @@ const handleSubmit = async () => {
   let url
   if (target){
     let env = authModeList[target-1]
-    url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'http://gat.shaanxi.gov.cn/auth'}/authgzh/auth2?certToken=${certToken}&env=${env}`
+    url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'https://sfrz.shxga.gov.cn'}/authgzh/auth?certToken=${certToken}&env=${env}`
   } else {
     url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
   }
