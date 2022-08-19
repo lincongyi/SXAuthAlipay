@@ -1,0 +1,93 @@
+h1 {
+  text-align: center;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 40px 0;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.logo {
+  margin-right: 10px;
+
+  img {
+    border-radius: 50%;
+  }
+}
+
+.content {
+  box-sizing: border-box;
+  width: 400px;
+  margin: 0 auto;
+  padding: 60px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.refresh {
+  margin: 40px 0;
+  cursor: pointer;
+}
+
+.van-radio-group {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.tips {
+  color: #999;
+  font-size: 14px;
+}
+
+.overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 600px;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+
+  .overlay-container {
+    display: flex;
+  }
+}
+
+.section {
+  flex: 1;
+  margin-right: 40px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.card {
+  font-size: 14px;
+
+  .card-title {
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+
+  .cell {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+
+    .cell-title {
+      color: #999;
+    }
+  }
+}
+
+.mgt10 {
+  margin-bottom: 10px;
+}

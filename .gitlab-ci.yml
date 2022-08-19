@@ -1,0 +1,29 @@
+stages: # 分段
+  - install
+  - build
+
+cache: # 缓存
+  paths:
+    - node_modules
+    - build
+
+install-job:
+  tags:
+    - test
+  stage: install
+  script:
+    - npm install
+
+build-job:
+  tags:
+    - test
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+  only:
+    - dev
+

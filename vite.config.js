@@ -24,7 +24,8 @@ export default ({mode}) =>
       viteVConsole({
         entry: [
           path.resolve('src/pages/demo/main.js'),
-          path.resolve('src/pages/auth/main.js')
+          path.resolve('src/pages/auth/main.js'),
+          path.resolve('src/pages/authResult/main.js'),
         ], // entry for each page, different from the above
         localEnabled: mode === 'development',
         enabled: mode === 'development',
@@ -40,6 +41,7 @@ export default ({mode}) =>
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        '@images': path.resolve(__dirname, './src/assets'),
       },
     },
     pluginOptions: {
@@ -54,6 +56,9 @@ export default ({mode}) =>
           index: path.resolve(__dirname, 'index.html'),
           demo: path.resolve(__dirname, 'demo.html'),
           auth: path.resolve(__dirname, 'auth.html'),
+          toMiniProgram: path.resolve(__dirname, 'toMiniProgram.html'),
+          authResult: path.resolve(__dirname, 'authResult.html'),
+          authTask: path.resolve(__dirname, 'authTask.html'),
         }
       },
     },
