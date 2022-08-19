@@ -1,0 +1,23 @@
+stages: # 分段
+  - install
+  - build
+
+cache: # 缓存
+  paths:
+    - node_modules
+    - build
+
+install-job:
+  tags:
+    - test
+  stage: install
+  script:
+    - npm install
+
+build-job:
+  tags:
+    - test
+  stage: build
+  script:
+    - npm run build
+
