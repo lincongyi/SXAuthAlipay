@@ -20,11 +20,10 @@ build-job:
   stage: build
   script:
     - npm run build
-  only:
-    - dev
-
-artifacts:
+  artifacts:
     expire_in: 1 week
     paths:
       - dist
+  only:
+    - dev
 
