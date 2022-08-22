@@ -41,18 +41,17 @@ if (!navigatorMode){
 
     }
   } else {
-    console.log(authMode)
     alert(authMode)
-    // if (authMode){ // 跳转支付宝小程序
-    //   let schemeQuery = `certToken=${certToken}&env=${env}`
-    //   const encodeSchemeQuery = encodeURIComponent(schemeQuery)
-    //   const baseScheme = 'alipays://platformapi/startapp?appId=2021003128635520&page=pages/login/index'
-    //   const scheme = encodeURIComponent(`${baseScheme}&query=${encodeSchemeQuery}`)
-    //   window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
-    // } else { // 跳转支付宝生活号
-    //   let url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
-    //   window.location.href = url
-    // }
+    if (authMode){ // 跳转支付宝小程序
+      let schemeQuery = `certToken=${certToken}&env=${env}`
+      const encodeSchemeQuery = encodeURIComponent(schemeQuery)
+      const baseScheme = 'alipays://platformapi/startapp?appId=2021003128635520&page=pages/login/index'
+      const scheme = encodeURIComponent(`${baseScheme}&query=${encodeSchemeQuery}`)
+      window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
+    } else { // 跳转支付宝生活号
+      let url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+      window.location.href = url
+    }
   }
 }
 </script>
