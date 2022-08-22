@@ -91,13 +91,14 @@ const handleSubmit = async () => {
 
   let target = Number(authModeChecked.value)
   let url
-  if (target){
+  if (target) {
     let env = authModeList[target-1]
     url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'https://sfrz.shxga.gov.cn'}/authgzh/auth?certToken=${certToken}&env=${env}`
-  } else {
-    url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+  } else { // 直接跳转生活号
+    url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
   }
-  window.location.replace(url)
+  console.log(url)
+  // window.location.replace(url)
 }
 
 </script>

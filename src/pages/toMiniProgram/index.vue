@@ -32,7 +32,8 @@ if (!navigatorMode){
   const certToken = urlParams.get('certToken') || ''
 
   let authModeList = ['H5', 'MINI']
-  let authMode = authModeList.findIndex((item) => item===env)
+  let authMode = authModeList.findIndex((item) => item === env)
+  alert(authMode)
 
   if (navigatorMode === 1){
     if (authMode){ // 跳转微信小程序
@@ -48,7 +49,7 @@ if (!navigatorMode){
       const scheme = encodeURIComponent(`${baseScheme}&query=${encodeSchemeQuery}`)
       window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
     } else { // 跳转支付宝生活号
-      let url = `${import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+      let url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
       window.location.href = url
     }
   }
