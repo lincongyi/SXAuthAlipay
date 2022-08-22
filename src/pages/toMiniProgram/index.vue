@@ -27,7 +27,6 @@ if (!navigatorMode){
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(window.location.href.indexOf('?')+1)
 
-  alert(window.location.href)
   const urlParams = new URLSearchParams(query)
   const env = urlParams.get('env') || ''
   const certToken = urlParams.get('certToken') || ''

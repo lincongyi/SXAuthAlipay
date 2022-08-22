@@ -46,7 +46,7 @@
         <van-radio name="0">生活号</van-radio>
 
         <div class="radio-title">跳转空白页面后重定向</div>
-        <van-radio name="1">公众号or生活号</van-radio>
+        <van-radio name="1">生活号</van-radio>
         <van-radio name="2">MINI PROGRAM</van-radio>
 
       </van-radio-group>
@@ -64,7 +64,7 @@ const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) // 密码
 const mode = ref(66) // 认证模式
 const username = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 姓名
 const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 证件号码
-const authModeList = ['H5', 'MINI'] // H5（生活号公众号） or MINI（小程序）
+const authModeList = ['H5', 'MINI'] // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
 
 const handleSubmit = async () => {

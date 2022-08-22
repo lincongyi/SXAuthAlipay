@@ -1,7 +1,7 @@
 ## 线上地址
 http://gat.shaanxi.gov.cn/auth/sxauthalipay/demo.html
 https://auth.shxga.gov.cn/sxauthalipay/demo.html
-https://sfrz.shxga.gov.cn/sxauthalipay/demo.html
+https://sfrz.wsbs.shxga.gov.cn/sxauthalipay/demo.html
 
 ## 模块划分
 /demo 模拟第三方demo
@@ -19,6 +19,6 @@ https://sfrz.shxga.gov.cn/sxauthalipay/demo.html
 
 ## 跳转模式
 
-### 1.h5直接跳转生活号or公众号
-### 2.h5跳转引导页，再重定向到生活号or公众号
+### 1.h5直接跳转生活号
+### 2.h5跳转引导页，再重定向到生活号
 ### 3.h5跳转引导页，再重定向到小程序
