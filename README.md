@@ -1,6 +1,7 @@
 ## 线上地址
 http://gat.shaanxi.gov.cn/auth/sxauthalipay/demo.html
 https://auth.shxga.gov.cn/sxauthalipay/demo.html
+https://sfrz.shxga.gov.cn/sxauthalipay/demo.html
 https://sfrz.wsbs.shxga.gov.cn/sxauthalipay/demo.html
 
 ## 模块划分
