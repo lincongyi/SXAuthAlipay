@@ -97,6 +97,7 @@ const handleSubmit = async () => {
     url = `${domain}/authgzh/auth?certToken=${certToken}&env=${env}`
   } else { // 直接跳转生活号
     let domain = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}`
+    alert(domain)
     url = `${domain}/auth?certToken=${certToken}`
   }
   alert(url)
