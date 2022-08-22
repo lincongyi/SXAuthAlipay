@@ -27,6 +27,7 @@ if (!navigatorMode){
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(window.location.href.indexOf('?')+1)
 
+  alert(window.location.href)
   const urlParams = new URLSearchParams(query)
   const env = urlParams.get('env') || ''
   const certToken = urlParams.get('certToken') || ''
@@ -41,7 +42,6 @@ if (!navigatorMode){
 
     }
   } else {
-    alert(authMode)
     if (authMode){ // 跳转支付宝小程序
       let schemeQuery = `certToken=${certToken}&env=${env}`
       const encodeSchemeQuery = encodeURIComponent(schemeQuery)
