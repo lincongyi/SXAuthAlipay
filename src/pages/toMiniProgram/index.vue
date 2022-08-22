@@ -33,7 +33,6 @@ if (!navigatorMode){
 
   let authModeList = ['H5', 'MINI']
   let authMode = authModeList.findIndex((item) => item === env)
-  alert(authMode)
 
   if (navigatorMode === 1){
     if (authMode){ // 跳转微信小程序

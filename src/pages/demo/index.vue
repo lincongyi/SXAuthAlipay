@@ -97,8 +97,7 @@ const handleSubmit = async () => {
   } else { // 直接跳转生活号
     url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
   }
-  console.log(url)
-  // window.location.replace(url)
+  window.location.replace(url)
 }
 
 </script>
