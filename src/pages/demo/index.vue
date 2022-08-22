@@ -99,7 +99,6 @@ const handleSubmit = async () => {
     let domain = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}`
     url = `${domain}/auth?certToken=${certToken}`
   }
-  alert(url)
   window.location.replace(url)
 }
 
