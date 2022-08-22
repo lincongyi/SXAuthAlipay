@@ -68,7 +68,6 @@ const authModeList = ['H5', 'MINI'] // H5（生活号公众号） or MINI（小�
 const authModeChecked = ref('2') // 选择跳转目的地
 
 const handleSubmit = async () => {
-  console.log(import.meta.env)
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
 
   let params = {
@@ -100,6 +99,7 @@ const handleSubmit = async () => {
     let domain = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}`
     url = `${domain}/auth?certToken=${certToken}`
   }
+  alert(url)
   window.location.replace(url)
 }
 
