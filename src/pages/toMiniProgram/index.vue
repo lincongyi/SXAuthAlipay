@@ -49,7 +49,7 @@ if (!navigatorMode){
       const scheme = encodeURIComponent(`${baseScheme}&query=${encodeSchemeQuery}`)
       window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
     } else { // 跳转支付宝生活号
-      let url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+      let url = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
       window.location.href = url
     }
   }
