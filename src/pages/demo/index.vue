@@ -91,12 +91,15 @@ const handleSubmit = async () => {
 
   let target = Number(authModeChecked.value)
   let url
-  if (target) {
-    let env = authModeList[target-1]
-    url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'https://sfrz.wsbs.shxga.gov.cn'}/authgzh/auth?certToken=${certToken}&env=${env}`
+  if (target) { // 通过空白引导页指引跳转生活号或者小程序
+    let env = authModeList[target - 1]
+    let domain = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'https://sfrz.wsbs.shxga.gov.cn'}`
+    url = `${domain}/authgzh/auth?certToken=${certToken}&env=${env}`
   } else { // 直接跳转生活号
-    url = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+    let domain = `${import.meta.env.NODE_ENV === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}`
+    url = `${domain}/auth?certToken=${certToken}`
   }
+  alert(url)
   window.location.replace(url)
 }
 
