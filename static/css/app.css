@@ -1,0 +1,153 @@
+.mui-plus.mui-android header.mui-bar {
+  display: none;
+}
+
+.mui-plus.mui-android .mui-bar-nav~.mui-content {
+  padding: 0;
+}
+
+h5.mui-content-padded {
+  margin-left: 3px;
+  margin-top: 20px !important;
+}
+
+h5.mui-content-padded:first-child {
+  margin-top: 12px !important;
+}
+
+.ui-alert {
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 16px;
+}
+
+p,
+div,
+ul,
+li {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin: 0;
+}
+
+/**
+ * 按钮样式
+ */
+.mui-btn {
+  font-size: 14px;
+  padding: 9px;
+}
+
+.mui-input-row .mui-input-clear~.mui-icon-clear,
+.mui-input-row .mui-input-password~.mui-icon-eye,
+.mui-input-row .mui-input-speech~.mui-icon-speech {
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+}
+
+/**
+ * 输入框样式
+ */
+.mui-input-group .mui-input-row {
+  line-height: 1.5;
+}
+
+.mui-input-row label~input,
+.mui-input-row label~select,
+.mui-input-row label~textarea {
+  font-size: 14px;
+}
+
+.mui-input-group .mui-input-row {
+  height: auto;
+}
+
+input:disabled {
+  background-color: #fff;
+  color: #222;
+  opacity: 1;
+  -webkit-text-fill-color: #222;
+  -webkit-opacity: 1;
+}
+
+input:disabled[placeholder] {
+  background-color: #fff;
+  color: #888;
+  opacity: 1;
+  -webkit-text-fill-color: #888;
+  -webkit-opacity: 1;
+}
+
+.showvalue input:disabled[placeholder] {
+  background-color: #fff;
+  color: #222;
+  opacity: 1;
+  -webkit-text-fill-color: #222;
+  -webkit-opacity: 1;
+}
+
+* html input.disabled {
+  border: none;
+  background-color: #fff;
+  color: #333;
+}
+
+/* 认证前提示 */
+.mui-popover.mui-popover-action.mui-popover-bottom {
+  left: 0;
+  right: 0;
+}
+
+/* 修改picker样式 */
+.mui-picker {
+  background: #fff;
+}
+
+.mui-dtpicker-title h5 {
+  background: #f7f7f7;
+  border-top: none;
+  border-bottom: none;
+}
+
+.mui-dtpicker-header .mui-btn {
+  padding: 6px 16px;
+}
+
+.mui-poppicker-header .mui-btn {
+  padding: 6px 16px;
+}
+
+.mui-poppicker-body {
+  border-top: none;
+}
+
+.mui-input-group .mui-input-row:after {
+  transform-origin: 50% 100%;
+  background-color: rgba(0, 0, 0, .2);
+}
+
+/* toast提示 */
+.mui-toast-container {
+  bottom: none;
+  top: 60%;
+  transform: translateY(-50%);
+}
+
+.mui-toast-message {
+  color: #fff;
+  max-width: 200px;
+  min-height: 48px;
+  display: inline-block;
+  background: rgb(78, 78, 78);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
