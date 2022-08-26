@@ -12,15 +12,19 @@ install-job:
     - test
   stage: install
   script:
+    - echo "=============开始编译============="
     - npm config set registry https://registry.npm.taobao.org/
     - npm install
+    - echo "=============结束编译============="
 
 build-job:
   tags:
     - test
   stage: build
   script:
+    - echo "=============开始打包============="
     - npm run build
+    - echo "=============结束打包============="
   artifacts:
     expire_in: 1 week
     paths:
