@@ -78,11 +78,15 @@ const foreBackUrl = ref('') // 第三方h5页面url
 // 返回第三方h5页面
 const handleBack = () => {
   if (!foreBackUrl.value) return
-  window.location.href = foreBackUrl.value
+  // window.location.href = foreBackUrl.value
+  // eslint-disable-next-line no-undef
+  AlipayJSBridge.call('closeWebview')
 }
 
 onMounted(() => {
-  let query = window.location.href.substring(window.location.href.indexOf('?')+1)
+  let href = 'https://sfrz.wsbs.shxga.gov.cn/sxauthalipay/authResult.html?mode=66&resStr=00XX&foreBackUrl=null&chInfo=ch_share__chsub_CopyLink&fxzjshareChinfo=ch_share__chsub_CopyLink&apshareid=B46DAA8D-BA8D-44F7-8B3F-36B9332F1414&shareBizType=mrfxzw'
+  // let query = window.location.href.substring(window.location.href.indexOf('?')+1)
+  let query = href.substring(window.location.href.indexOf('?')+1)
   if (!query.includes('&')) return Dialog.alert({ message: '路径参数有错，请重新获取' })
 
   const authParams = query.substring(0, query.indexOf('&foreBackUrl'))
