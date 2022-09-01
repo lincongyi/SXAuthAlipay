@@ -63,6 +63,7 @@
   <van-action-sheet v-model:show="isActionSheetShow" title="认证授权">
     <div class="content">
       <div class="upper-tips" v-html="beforeAuth"></div>
+      <div class="center-tips">本次认证需要通过人脸识别验证身份信息</div>
       <van-divider />
       <div class="lower-tips">
         <van-checkbox v-model="isChecked" shape="square"></van-checkbox>
@@ -73,8 +74,7 @@
         </p>
       </div>
       <div class="btn-group">
-        <van-button square plain type="primary" class="authorize-btn to-cancel-authorize-btn" @click="toCancelAuthorize">取消授权</van-button>
-        <van-button square type="primary" :class="['to-authorize-btn', 'authorize-btn', {'active':isChecked}]" @click="toAuthorize">确认授权</van-button>
+        <van-button block square type="primary" @click="toAuthorize">确认授权</van-button>
       </div>
     </div>
   </van-action-sheet>
@@ -102,9 +102,9 @@ if (!url.includes('&')){
   Dialog.alert({
     message: '路径参数有错，请重新获取'
   })
-  setTimeout(() => {
-    window.history.go(-1)
-  }, 1500)
+  // setTimeout(() => {
+  //   window.history.go(-1)
+  // }, 1500)
 }
 const query = url.substring(url.indexOf('?')+1)
 
@@ -239,9 +239,14 @@ h1{
 .content{
   margin: 20px;
   .upper-tips{
+    line-height: 1.2;
     margin: 20px 0;
   }
+  .center-tips{
+    line-height: bold;
+  }
   .lower-tips{
+    font-size: 14px;
     display: flex;
     margin-bottom: 20px;
     .text{
@@ -257,9 +262,9 @@ h1{
   }
 }
 .auth-logo{
-  text-align: center;
+  width: 50%;
+  margin: 0 auto;
   margin-top: 40px;
-  transform: scale(.8)
 }
 .btn-group{
   display: flex;
