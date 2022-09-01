@@ -21,7 +21,7 @@
         <van-icon name="replay" />
         刷新or生成二维码
       </div>
-      <van-radio-group v-model="authMode.mode" direction="horizontal">
+      <van-radio-group v-model="authMode.mode" direction="horizontal" @change="refreshQrcode">
         <van-radio name="64">实名</van-radio>
         <van-radio name="66">实名+实人</van-radio>
       </van-radio-group>
@@ -246,8 +246,7 @@ const getUserData = (cert_token) => {
     let certToken = dataParse.cert_token
 
     let result = await getCertTokenImg({certToken})
-    console.log(result)
-    let {authInfo, businessInfo, img, tokenInfo, userInfo} = result
+    let {authInfo, img, userInfo} = result
 
     userData.authType = authInfo.authType // 认证方式
     userData.phoneNum = userInfo.phoneNum // 手机号码
@@ -263,6 +262,16 @@ const getUserData = (cert_token) => {
   }
 }
 
+// radio change
+const refreshQrcode = () => {
+  isForbidden.value = true
+  handleGetCertToken(() => {
+    setTimeout(() => {
+      isForbidden.value = false
+    }, REFRESHTIME*1000)
+  })
+}
+
 // 刷新二维码
 const handleRefresh = () => {
   if (isForbidden.value) {
@@ -271,14 +280,7 @@ const handleRefresh = () => {
       forbidClick: true,
     })
   }
-
-  isForbidden.value = true
-  handleGetCertToken(() => {
-    setTimeout(() => {
-      isForbidden.value = false
-    }, REFRESHTIME*1000)
-  })
-
+  refreshQrcode()
 }
 
 onMounted(() => {
