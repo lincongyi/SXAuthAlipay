@@ -102,6 +102,13 @@ const handleSubmit = async () => {
   window.location.replace(url)
 }
 
+onMounted(() => {
+  let href = decodeURIComponent(window.location.href)
+  let query = href.substring(href.indexOf('?') + 1)
+  const urlParams = new URLSearchParams(query)
+  console.log('query', query)
+})
+
 </script>
 
 <style lang="scss">
