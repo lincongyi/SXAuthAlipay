@@ -59,6 +59,7 @@
 
 <script setup>
 import {getAccessToken, getCertToken} from '@/api/demo/index'
+import { Toast } from 'vant'
 const clientId = ref(import.meta.env.VITE_CLIENT_ID) // 账号
 const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) // 密码
 const mode = ref(66) // 认证模式
@@ -106,7 +107,11 @@ onMounted(() => {
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(href.indexOf('?') + 1)
   const urlParams = new URLSearchParams(query)
-  console.log('query', query)
+  const errorMsg = urlParams.get('errorMsg')
+  if (errorMsg) return Toast({
+    message: `认证${errorMsg}`,
+    forbidClick: true,
+  })
 })
 
 </script>
