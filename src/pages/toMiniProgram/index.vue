@@ -30,7 +30,8 @@ if (!navigatorMode){
   const foreBackUrl = urlParams.get('foreBackUrl')
   if (foreBackUrl) { // 小程序认证后返回，指定跳转回第三方h5页面
     let url = query.substring(query.indexOf('foreBackUrl')).replace(/foreBackUrl=/g, '')
-    window.location.replace = url
+    console.log(url)
+    window.location.href = url
   } else { // 跳转认证小程序
     const env = urlParams.get('env') || ''
     const certToken = urlParams.get('certToken') || ''
