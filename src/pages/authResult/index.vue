@@ -78,9 +78,9 @@ const foreBackUrl = ref('') // 第三方h5页面url
 // 返回第三方h5页面
 const handleBack = () => {
   if (!foreBackUrl.value) return
-  // window.location.href = foreBackUrl.value
+  window.location.href = foreBackUrl.value
   // eslint-disable-next-line no-undef
-  AlipayJSBridge.call('closeWebview')
+  // AlipayJSBridge.call('closeWebview')
 }
 
 onMounted(() => {
