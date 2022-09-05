@@ -161,7 +161,7 @@
   </van-overlay>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import './index.scss'
 import { getCertToken, getCertTokenImg } from '@/api/authTask'
 import { Toast } from 'vant'

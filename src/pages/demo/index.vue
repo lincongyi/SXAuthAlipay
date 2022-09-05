@@ -57,7 +57,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {getAccessToken, getCertToken} from '@/api/demo/index'
 import { Toast } from 'vant'
 const clientId = ref(import.meta.env.VITE_CLIENT_ID) // 账号

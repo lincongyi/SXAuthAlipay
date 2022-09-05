@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Dialog } from 'vant'
 
 // 判断当前浏览器环境

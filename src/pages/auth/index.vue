@@ -80,7 +80,7 @@
   </van-action-sheet>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { checkIdentityInfo, getBeforeAuthTips, alipayAuthInit, alipayAuthQuery} from '@/api/auth/index'
 import { Toast, Dialog } from 'vant'
 import { hideCode, getImageUrl } from '@/utils/index'

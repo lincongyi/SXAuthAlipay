@@ -2,10 +2,11 @@
   "name": "vite-project",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "stage": "vite --mode stage",
-    "build": "vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "vue": "^3.2.25"
   },
   "devDependencies": {
+    "@types/node": "^18.7.14",
     "@vitejs/plugin-vue": "^2.3.3",
     "eslint": "^8.15.0",
     "eslint-plugin-vue": "^8.7.1",
@@ -26,9 +28,11 @@
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-standard": "^25.0.0",
     "stylelint-order": "^5.0.0",
+    "typescript": "^4.8.2",
     "unplugin-auto-import": "^0.7.2",
     "vite": "^2.9.9",
     "vite-plugin-style-import": "^1.4.1",
-    "vite-plugin-vconsole": "^1.2.1"
+    "vite-plugin-vconsole": "^1.2.1",
+    "vue-tsc": "^0.40.7"
   }
 }
