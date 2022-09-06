@@ -2,7 +2,17 @@ import request from '@/utils/request'
 /**
   * 校验certToken 或 userId 是否有绑定用户的信息
  */
-export function checkIdentityInfo(data) {
+interface ICertToken {
+  certToken: string;
+}
+interface ICheckIdentityInfoData extends ICertToken {
+  loginToken: string;
+}
+interface IAlipayAuthInitData extends ICertToken {
+  fullName: string;
+  idNum: string;
+}
+export function checkIdentityInfo(data:ICheckIdentityInfoData) {
   return request({
     url: '/checkIdentityInfo',
     method: 'post',
@@ -13,7 +23,7 @@ export function checkIdentityInfo(data) {
 /**
   * 根据certToken获取认证前提示
  */
-export function getBeforeAuthTips(data) {
+export function getBeforeAuthTips(data:ICertToken) {
   return request({
     url: '/getBeforeAuthTips',
     method: 'post',

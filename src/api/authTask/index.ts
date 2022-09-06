@@ -1,19 +1,19 @@
-import request from "@/utils/request";
-import { loadEnv } from "@/utils/index";
-const baseURL = "https://sfrz.wsbs.shxga.gov.cn";
+import request from '@/utils/request'
+import { loadEnv } from '@/utils/index'
+const baseURL = 'https://sfrz.wsbs.shxga.gov.cn'
 
-const { VITE_DEMO_BASE_URL } = loadEnv();
+const { VITE_DEMO_BASE_URL } = loadEnv()
 /**
  * 获取certToken
  */
 export function getCertToken(data) {
   return request({
     baseURL:
-      process.env.NODE_ENV === "production" ? VITE_DEMO_BASE_URL : baseURL,
-    url: "/fama/demo/getcerttoken",
-    method: "post",
+      process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL,
+    url: '/fama/demo/getcerttoken',
+    method: 'post',
     data,
-  });
+  })
 }
 
 /**
@@ -22,9 +22,9 @@ export function getCertToken(data) {
 export function getCertTokenImg(data) {
   return request({
     baseURL:
-      process.env.NODE_ENV === "production" ? VITE_DEMO_BASE_URL : baseURL,
-    url: "/fama/demo/getcerttokenimg",
-    method: "post",
+      process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL,
+    url: '/fama/demo/getcerttokenimg',
+    method: 'post',
     data,
-  });
+  })
 }
