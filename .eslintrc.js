@@ -8,6 +8,8 @@ module.exports = {
   'extends': [
     'eslint:recommended',
     'plugin:vue/vue3-essential',
+    '@vue/typescript/recommended',
+    '@vue/eslint-config-typescript',
     './.eslintrc-auto-import.json',
   ],
   'parserOptions': {
