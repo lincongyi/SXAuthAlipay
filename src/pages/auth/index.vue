@@ -102,9 +102,9 @@ if (!url.includes('&')){
   Dialog.alert({
     message: '路径参数有错，请重新获取'
   })
-  // setTimeout(() => {
-  //   window.history.go(-1)
-  // }, 1500)
+  setTimeout(() => {
+    window.history.go(-1)
+  }, 1500)
 }
 const query = url.substring(url.indexOf('?')+1)
 
