@@ -11,26 +11,26 @@ export function hideCode(
   endLen: number
 ): string {
   if (!str) {
-    return "";
+    return ''
   }
-  var len = str.length - frontLen - endLen;
-  var xing = "";
-  for (var i = 0; i < len; i++) {
-    xing += "*";
+  const len = str.length - frontLen - endLen
+  let xing = ''
+  for (let i = 0; i < len; i++) {
+    xing += '*'
   }
-  return str.substring(0, frontLen) + xing + str.substring(str.length - endLen);
+  return str.substring(0, frontLen) + xing + str.substring(str.length - endLen)
 }
 
 /**
  * 引入静态图片
  */
 export function getImageUrl<T>(name: T) {
-  return new URL(`/src/assets/${name}.png`, import.meta.url).href;
+  return new URL(`/src/assets/${name}.png`, import.meta.url).href
 }
 
 /**
  * 环境变量
  */
 export const loadEnv = (): ViteEnv => {
-  return import.meta.env;
-};
+  return import.meta.env
+}

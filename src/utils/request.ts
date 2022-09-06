@@ -12,24 +12,26 @@ const service = axios.create({
 })
 
 // 响应拦截器
-service.interceptors.response.use(res => {
-  const retCode = res.data.retCode
-  if (retCode !== 200) {
-    if (!retCode) return res.data
+service.interceptors.response.use(
+  (res) => {
+    const retCode = res.data.retCode
+    if (retCode !== 200) {
+      if (!retCode) return res.data
+      Dialog.alert({
+        message: res.data.retMessage
+      })
+      return Promise.reject('error')
+    } else {
+      return res.data
+    }
+  },
+  (error) => {
+    console.log(error)
     Dialog.alert({
-      message: res.data.retMessage
+      message: error.message
     })
-    return Promise.reject('error')
-  } else {
-    return res.data
+    return Promise.reject(error)
   }
-},
-error => {
-  console.log(error)
-  Dialog.alert({
-    message: error.message
-  })
-  return Promise.reject(error)
-})
+)
 
 export default service
