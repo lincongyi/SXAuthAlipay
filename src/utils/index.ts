@@ -5,21 +5,32 @@
  * @param endLen 字符串后面保留位数
  * @returns {string}
  */
-export function hideCode(str, frontLen, endLen) {
+export function hideCode(
+  str: string,
+  frontLen: number,
+  endLen: number
+): string {
   if (!str) {
-    return ''
+    return "";
   }
-  var len = str.length - frontLen - endLen
-  var xing = ''
+  var len = str.length - frontLen - endLen;
+  var xing = "";
   for (var i = 0; i < len; i++) {
-    xing += '*'
+    xing += "*";
   }
-  return str.substring(0, frontLen) + xing + str.substring(str.length - endLen)
+  return str.substring(0, frontLen) + xing + str.substring(str.length - endLen);
 }
 
 /**
-  * 引入静态图片
+ * 引入静态图片
  */
-export function getImageUrl(name) {
-  return new URL(`/src/assets/${name}.png`, import.meta.url).href
+export function getImageUrl<T>(name: T) {
+  return new URL(`/src/assets/${name}.png`, import.meta.url).href;
 }
+
+/**
+ * 环境变量
+ */
+export const loadEnv = (): ViteEnv => {
+  return import.meta.env;
+};

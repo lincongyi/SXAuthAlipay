@@ -60,13 +60,13 @@
 <script setup lang="ts">
 import {getAccessToken, getCertToken} from '@/api/demo/index'
 import { Toast } from 'vant'
-const clientId = ref(import.meta.env.VITE_CLIENT_ID) // 账号
-const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) // 密码
-const mode = ref(66) // 认证模式
-const username = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 姓名
-const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 证件号码
+const clientId = ref<string>(import.meta.env.VITE_CLIENT_ID) // 账号
+const clientSecret = ref<string>(import.meta.env.VITE_CLIENT_SECRET) // 密码
+const mode = ref<number|string>(66) // 认证模式
+const username = ref<string>('') // 姓名
+const idNum = ref<string>('') // 证件号码
 const authModeList = ['H5', 'MINI'] // H5（生活号） or MINI（小程序）
-const authModeChecked = ref('2') // 选择跳转目的地
+const authModeChecked = ref<string>('2') // 选择跳转目的地
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
@@ -91,7 +91,7 @@ const handleSubmit = async () => {
   let {certToken} = tokenInfo
 
   let target = Number(authModeChecked.value)
-  let url
+  let url:string
   if (target) { // 通过空白引导页指引跳转生活号或者小程序
     let env = authModeList[target - 1]
     let domain = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'https://sfrz.wsbs.shxga.gov.cn'}`
@@ -100,7 +100,7 @@ const handleSubmit = async () => {
     let domain = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}`
     url = `${domain}/auth?certToken=${certToken}`
   }
-  window.location.replace(url)
+  // window.location.replace(url)
 }
 
 onMounted(() => {

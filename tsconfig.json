@@ -17,8 +17,9 @@
     "paths": {
       "@/*": ["src/*"],
       "@images/*": ["src/assets"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types/", "./types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","./auto-import.d.ts"],
+  "include": ["src/**/*.ts", "types/*.d.ts", "src/**/*.tsx", "src/**/*.vue","./auto-import.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }
