@@ -70,13 +70,13 @@ const authModeChecked = ref('2') // 选择跳转目的地
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
-
+  let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
   let params = {
     accessToken,
     authType: 'GzhRegular',
     mode: mode.value,
     extraParams: {
-      foreBackUrl: location.href
+      foreBackUrl
     },
     businessInfo: {
       subject: '身份验证'
