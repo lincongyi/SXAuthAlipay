@@ -71,14 +71,14 @@ const authModeList = ['H5', 'MINI'] // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
 
 const handleSubmit = async () => {
-  let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
-
-  const params = {
+  let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as{accessToken:string}
+  let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
+  let params = {
     accessToken,
     authType: 'GzhRegular',
     mode: mode.value,
     extraParams: {
-      foreBackUrl: location.href
+      foreBackUrl
     },
     businessInfo: {
       subject: '身份验证'
@@ -89,7 +89,7 @@ const handleSubmit = async () => {
     }
   }
 
-  let {tokenInfo} = await getCertToken(params)
+  let {tokenInfo} = await getCertToken(params) as unknown as{tokenInfo:{certToken:string}}
   let {certToken} = tokenInfo
 
   let target = Number(authModeChecked.value)
