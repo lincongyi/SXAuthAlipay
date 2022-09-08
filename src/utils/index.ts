@@ -3,7 +3,7 @@
  * @param str 字符串
  * @param frontLen 字符串前面保留位数
  * @param endLen 字符串后面保留位数
- * @returns {string}
+ * @returns string
  */
 export function hideCode(
   str: string,

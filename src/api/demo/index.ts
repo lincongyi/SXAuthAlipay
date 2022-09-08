@@ -1,37 +1,28 @@
-import request from "@/utils/request";
-import { loadEnv } from "@/utils/index";
+import request from '@/utils/request'
+import { loadEnv } from '@/utils/index'
 
-const { VITE_DEMO_BASE_URL } = loadEnv();
-
-interface IResponse extends Promise<any> {
-  retCode?: number;
-  retMessage?: string;
-}
+const { VITE_DEMO_BASE_URL } = loadEnv()
 
 /**
  * 获取accessToken
  */
-interface IGetAccessTokenParams {
-  clientId: string;
-  clientSecret: string;
-}
-export function getAccessToken(params: IGetAccessTokenParams): IResponse {
+export function getAccessToken(params?:object) {
   return request({
     baseURL: VITE_DEMO_BASE_URL,
-    url: "/getaccesstoken",
-    method: "get",
+    url: '/getaccesstoken',
+    method: 'get',
     params,
-  });
+  })
 }
 
 /**
  * 获取certToken
  */
-export function getCertToken(data: object): IResponse {
+export function getCertToken(data?: object) {
   return request({
     baseURL: VITE_DEMO_BASE_URL,
-    url: "/authreq",
-    method: "post",
+    url: '/authreq',
+    method: 'post',
     data,
-  });
+  })
 }

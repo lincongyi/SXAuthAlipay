@@ -63,7 +63,7 @@
             </div>
             <div class="cell">
               <div class="cell-title">手机号：</div>
-              <div class="cell-value">{{userData.phone}}</div>
+              <div class="cell-value">{{userData.phoneNum}}</div>
             </div>
             <div class="cell">
               <div class="cell-title">网证标识：</div>
@@ -179,7 +179,15 @@ const userImage = ref('') // 用户认证图片
 
 const terminalUnit = '大白互联网科技有限公司'
 
-let userData = reactive({}) // 接收后端返回的用户信息
+type TUserData = {
+  name?:string;
+  idNum?:string;
+  mode?:string;
+  time?: string;
+  authType?: string;
+  phoneNum?: string;
+}
+let userData = reactive<TUserData>({}) // 接收后端返回的用户信息
 
 let authMode = reactive({
   certAnnexType: 0,
@@ -193,14 +201,14 @@ const authLevelList = [ // 认证模式对应的认证等级
 
 const authLevel = computed(() => {
   let mode = Number(authMode.mode)
-  let {level} = authLevelList.find((item) => item.mode === mode)
-  return level
+  let result = authLevelList.find((item) => item.mode === mode)
+  return result?.level
 })
 
 let {browser, version} = getExploreInfo()
 
 // 获取二维码
-const handleGetCertToken = async (cb) => {
+const handleGetCertToken = async (cb?: ()=>void) => {
   let result = await getCertToken({
     ...authMode,
     businessExtraInfo: JSON.stringify({
@@ -216,11 +224,11 @@ const handleGetCertToken = async (cb) => {
 }
 
 // webSocket监听用户是否有认证结果返回
-let timer // 定时器
-let ws // webSocket
+let timer:any // 定时器
+let ws:WebSocket // webSocket
 const EXPIRETIME = 30 // 后端40s内没接收到任何数据，自动断开链接
 
-const getUserData = (cert_token) => {
+const getUserData = (cert_token:string) => {
   const webSocketUrl = 'wss://sfrz.shxga.gov.cn/socket/conn'
   ws = new WebSocket(webSocketUrl)
   ws.onopen = () => {
@@ -245,11 +253,20 @@ const getUserData = (cert_token) => {
 
     let certToken = dataParse.cert_token
 
+    interface IGetCertTokenImg {
+      authInfo: {
+        authType: string;
+      };
+      img:string;
+      userInfo: {
+        phoneNum: string
+      }
+    }
     let result = await getCertTokenImg({certToken})
-    let {authInfo, img, userInfo} = result
+    let {authInfo, img, userInfo} = result as unknown as IGetCertTokenImg
 
-    userData.authType = authInfo.authType // 认证方式
-    userData.phoneNum = userInfo.phoneNum // 手机号码
+    userData.authType = authInfo?.authType // 认证方式
+    userData.phoneNum = userInfo?.phoneNum // 手机号码
     userImage.value = `data:image/png;base64,${img}`
 
 

@@ -6,7 +6,7 @@ const { VITE_DEMO_BASE_URL } = loadEnv()
 /**
  * 获取certToken
  */
-export function getCertToken(data) {
+export function getCertToken(data?:object) {
   return request({
     baseURL:
       process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL,
@@ -19,7 +19,7 @@ export function getCertToken(data) {
 /**
  * 获取用户信息
  */
-export function getCertTokenImg(data) {
+export function getCertTokenImg(data?:object) {
   return request({
     baseURL:
       process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL,

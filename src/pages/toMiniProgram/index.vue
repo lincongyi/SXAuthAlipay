@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 import { Dialog } from 'vant'
+import { loadEnv } from '@/utils/index'
 
 // 判断当前浏览器环境
 let userAgent = window.navigator.userAgent
@@ -52,7 +53,8 @@ if (!navigatorMode){
         const scheme = encodeURIComponent(`${baseScheme}&query=${encodeSchemeQuery}`)
         window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
       } else { // 跳转支付宝生活号
-        let url = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+        const { MODE, VITE_AUTH_BASE_URL, VITE_PROXY_AUTH_BASE_URL} = loadEnv()
+        let url = `${MODE === 'production' ? VITE_AUTH_BASE_URL : VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
         window.location.href = url
       }
     }

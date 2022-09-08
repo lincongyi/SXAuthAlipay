@@ -1,20 +1,17 @@
 <template>
-  <div class="loading-wrap">
-    <van-loading color="#0094ff" size="40px" vertical>加载中...</van-loading>
-    <!-- <div class="container">
-      <div class="auth-result">
-        <van-image class="result-image" :src="resultList[authResult].resultImage">
-          <template v-slot:error>加载失败</template>
-        </van-image>
-        <div class="description">{{resultList[authResult].resultTxt}}</div>
-      </div>
-      <template v-for="(item,index) in authResultStep" :key="index">
-        <div :class="['step',['failed','successful'][item.value]]">{{item.key}}</div>
-      </template>
-      <div class="btn-wrap">
-        <van-button type="primary" block @click="handleBack">返回</van-button>
-      </div>
-    </div> -->
+  <div class="container">
+    <div class="auth-result">
+      <van-image class="result-image" :src="resultList[authResult].resultImage">
+        <template v-slot:error>加载失败</template>
+      </van-image>
+      <div class="description">{{resultList[authResult].resultTxt}}</div>
+    </div>
+    <template v-for="(item,index) in authResultStep" :key="index">
+      <div :class="['step',['failed','successful'][item.value]]">{{item.key}}</div>
+    </template>
+    <div class="btn-wrap">
+      <van-button type="primary" block @click="handleBack">返回</van-button>
+    </div>
   </div>
 </template>
 
@@ -56,8 +53,8 @@ const authResultStep = computed(() => {
     {key: '人像比对', value: 2}
   ]
   if (authMode.value){
-    let {type} = modeList.find((item) => item.mode.includes(authMode.value))
-    let data = authData.value.slice(0, type)
+    let modeItem = modeList.find((item) => item.mode.includes(authMode.value))
+    let data = authData.value.slice(0, modeItem?.type)
     for (let i=0;i<data.length;i++){
       let value = Number(data[i])===0 ? 1:0
       result[i].value = value
@@ -155,12 +152,4 @@ onMounted(() => {
 .btn-wrap {
   margin: 60px 40px;
 }
-
-.loading-wrap{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-}
-
 </style>
