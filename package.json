@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "stage": "vite --mode stage",
+    "v3": "vite --mode v3",
     "build": "vite build",
     "build:stage": "vite build --mode stage",
     "preview": "vite preview"
