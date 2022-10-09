@@ -115,7 +115,7 @@ const certToken = urlParams.get('certToken') || ''
 
 const beforeAuth = ref('')
 const beforeProtocol = ref('')
-const protocols = ref({ url: '' })
+const protocols = ref({url: '', name: ''})
 
 const certifyUrl = ref('')
 const certifyId = ref('')
@@ -143,9 +143,8 @@ onMounted(async() => {
 })
 
 const { VITE_SERVICE_AGREEMENT } = loadEnv()
-const serviceAgreement = VITE_SERVICE_AGREEMENT // 服务协议地址
 const toProtocols = () => {
-  window.location.href = protocols.value.url || serviceAgreement
+  window.location.href = protocols.value.url || VITE_SERVICE_AGREEMENT // 服务协议地址
 }
 
 // 取消授权

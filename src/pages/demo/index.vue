@@ -67,11 +67,11 @@ const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
 const mode = ref<number|string>(66) // 认证模式
 const username = ref('') // 姓名
 const idNum = ref('') // 证件号码
-const authModeList = ['H5', 'MINI'] // H5（生活号） or MINI（小程序）
+const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
 
 const handleSubmit = async () => {
-  let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as{accessToken:string}
+  let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as {accessToken: string}
   let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
   let params = {
     accessToken,
@@ -89,7 +89,7 @@ const handleSubmit = async () => {
     }
   }
 
-  let {tokenInfo} = await getCertToken(params) as unknown as{tokenInfo:{certToken:string}}
+  let {tokenInfo} = await getCertToken(params) as unknown as {tokenInfo: {certToken: string}}
   let {certToken} = tokenInfo
 
   let target = Number(authModeChecked.value)

@@ -42,7 +42,7 @@ const resultList = [
     resultTxt: '认证失败',
     resultImage: certificationFailedImage
   },
-]
+] as const
 const authMode = ref(0) // 认证模式
 const authData = ref('') // 认证结果
 // 每项认证步骤的结果

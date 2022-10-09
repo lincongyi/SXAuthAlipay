@@ -36,7 +36,7 @@ if (!navigatorMode){
     const env = urlParams.get('env') || ''
     const certToken = urlParams.get('certToken') || ''
 
-    let authModeList = ['H5', 'MINI']
+    let authModeList = ['H5', 'MINI'] as const
     let authMode = authModeList.findIndex((item) => item === env)
 
     if (navigatorMode === 1){

@@ -197,7 +197,7 @@ let authMode = reactive({
 const authLevelList = [ // 认证模式对应的认证等级
   {mode: 64, level: 'D'},
   {mode: 66, level: 'C'}
-]
+] as const
 
 const authLevel = computed(() => {
   let mode = Number(authMode.mode)
@@ -268,7 +268,6 @@ const getUserData = (cert_token:string) => {
     userData.authType = authInfo?.authType // 认证方式
     userData.phoneNum = userInfo?.phoneNum // 手机号码
     userImage.value = `data:image/png;base64,${img}`
-
 
     isOverlayShow.value = true
   }
