@@ -226,10 +226,10 @@ const handleGetCertToken = async (cb?: ()=>void) => {
 // webSocket监听用户是否有认证结果返回
 let timer:any // 定时器
 let ws:WebSocket // webSocket
+const webSocketUrl = 'wss://sfrz.wsbs.shxga.gov.cn/socket/conn'
 const EXPIRETIME = 30 // 后端40s内没接收到任何数据，自动断开链接
 
 const getUserData = (cert_token:string) => {
-  const webSocketUrl = 'wss://sfrz.shxga.gov.cn/socket/conn'
   ws = new WebSocket(webSocketUrl)
   ws.onopen = () => {
     ws.send(JSON.stringify({
@@ -251,7 +251,7 @@ const getUserData = (cert_token:string) => {
     userData.time = dataParse.createdTime // 认证时间
 
 
-    let certToken = dataParse.cert_token
+    let certToken:string = dataParse.cert_token
 
     interface IGetCertTokenImg {
       authInfo: {

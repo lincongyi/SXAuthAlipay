@@ -24,14 +24,15 @@ if (!navigatorMode){
     window.history.go(-1)
   })
 } else {
-  // 跳转到小程序
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(href.indexOf('?') + 1)
   const urlParams = new URLSearchParams(query)
   const foreBackUrl = urlParams.get('foreBackUrl')
   if (foreBackUrl) { // 小程序认证后返回，指定跳转回第三方h5页面
+    console.log('foreBackUrl',foreBackUrl);
     let url = query.substring(query.indexOf('foreBackUrl')).replace(/foreBackUrl=/g, '')
-    window.location.href = url
+    console.log('url',url);
+    // window.location.href = url
   } else { // 跳转认证小程序
     const env = urlParams.get('env') || ''
     const certToken = urlParams.get('certToken') || ''
