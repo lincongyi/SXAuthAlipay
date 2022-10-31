@@ -1,4 +1,4 @@
-let userAgent = navigator.userAgent,
+const userAgent = navigator.userAgent,
   rMsie = /(msie\s|trident.*rv:)([\w.]+)/,
   rFirefox = /(firefox)\/([\w.]+)/,
   rOpera = /(opera).+version\/([\w.]+)/,
@@ -8,8 +8,8 @@ export function getExploreInfo(){
   return uaMatch(userAgent.toLowerCase())
 }
 
-function uaMatch(ua) {
-  var match = rMsie.exec(ua)
+function uaMatch(ua:string) {
+  let match = rMsie.exec(ua)
   if (match !== null) {
     return {
       browser: 'IE',
@@ -44,10 +44,8 @@ function uaMatch(ua) {
       version: match[1] || '0'
     }
   }
-  if (match !== null) {
-    return {
-      browser: '',
-      version: '0'
-    }
+  return {
+    browser: '',
+    version: '0'
   }
 }

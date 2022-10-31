@@ -1,8 +1,9 @@
 import request from '@/utils/request'
+
 /**
   * 校验certToken 或 userId 是否有绑定用户的信息
  */
-export function checkIdentityInfo(data) {
+export function checkIdentityInfo(data?:object) {
   return request({
     url: '/checkIdentityInfo',
     method: 'post',
@@ -13,7 +14,7 @@ export function checkIdentityInfo(data) {
 /**
   * 根据certToken获取认证前提示
  */
-export function getBeforeAuthTips(data) {
+export function getBeforeAuthTips(data?:object) {
   return request({
     url: '/getBeforeAuthTips',
     method: 'post',
@@ -24,7 +25,7 @@ export function getBeforeAuthTips(data) {
 /**
   * 获取调起支付宝刷脸url
  */
-export function alipayAuthInit(data) {
+export function alipayAuthInit(data?:object) {
   return request({
     url: '/alipayAuthInit',
     method: 'post',
@@ -35,7 +36,7 @@ export function alipayAuthInit(data) {
 /**
   * 刷脸认证后，通过后台获取支付宝认证结果
  */
-export function alipayAuthQuery(data) {
+export function alipayAuthQuery(data?:object) {
   return request({
     url: '/alipayAuthQuery',
     method: 'post',

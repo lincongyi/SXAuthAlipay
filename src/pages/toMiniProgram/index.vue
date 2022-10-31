@@ -4,8 +4,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Dialog } from 'vant'
+import { loadEnv } from '@/utils/index'
 
 // 判断当前浏览器环境
 let userAgent = window.navigator.userAgent
@@ -23,7 +24,6 @@ if (!navigatorMode){
     window.history.go(-1)
   })
 } else {
-  // 跳转到小程序
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(href.indexOf('?') + 1)
   const urlParams = new URLSearchParams(query)
@@ -35,7 +35,7 @@ if (!navigatorMode){
     const env = urlParams.get('env') || ''
     const certToken = urlParams.get('certToken') || ''
 
-    let authModeList = ['H5', 'MINI']
+    let authModeList = ['H5', 'MINI'] as const
     let authMode = authModeList.findIndex((item) => item === env)
 
     if (navigatorMode === 1){
@@ -52,7 +52,8 @@ if (!navigatorMode){
         const scheme = encodeURIComponent(`${baseScheme}&query=${encodeSchemeQuery}`)
         window.location.href = `https://ds.alipay.com/?scheme=${scheme}`
       } else { // 跳转支付宝生活号
-        let url = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
+        const { MODE, VITE_AUTH_BASE_URL, VITE_PROXY_AUTH_BASE_URL} = loadEnv()
+        let url = `${MODE === 'production' ? VITE_AUTH_BASE_URL : VITE_PROXY_AUTH_BASE_URL}/auth?certToken=${certToken}`
         window.location.href = url
       }
     }

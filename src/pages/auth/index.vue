@@ -80,10 +80,11 @@
   </van-action-sheet>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { checkIdentityInfo, getBeforeAuthTips, alipayAuthInit, alipayAuthQuery} from '@/api/auth/index'
 import { Toast, Dialog } from 'vant'
 import { hideCode, getImageUrl } from '@/utils/index'
+import { loadEnv } from '@/utils/index'
 
 const backPageUrl = ref('') // 用户关闭认证授权面板，返回的url地址
 const fullName = ref('') // 用户名
@@ -114,7 +115,7 @@ const certToken = urlParams.get('certToken') || ''
 
 const beforeAuth = ref('')
 const beforeProtocol = ref('')
-const protocols = ref({})
+const protocols = ref({url: '', name: ''})
 
 const certifyUrl = ref('')
 const certifyId = ref('')
@@ -141,9 +142,9 @@ onMounted(async() => {
 
 })
 
-const serviceAgreement = import.meta.env.VITE_SERVICE_AGREEMENT // 服务协议地址
+const { VITE_SERVICE_AGREEMENT } = loadEnv()
 const toProtocols = () => {
-  window.location.href = protocols.value.url || serviceAgreement
+  window.location.href = protocols.value.url || VITE_SERVICE_AGREEMENT // 服务协议地址
 }
 
 // 取消授权
@@ -172,11 +173,11 @@ const toAuthorize = async() => {
 
 // 身份认证文档
 // https://opendocs.alipay.com/mini/02osif
-const AuthProcess = (certifyId, url) => {
+const AuthProcess = (certifyId:string, url:string) => {
   /**
     * 支付宝H5页面接入逻辑代码 start
    */
-  function ready( callback ) {
+  function ready( callback:()=>void ) {
     // 如果jsbridge已经注入则直接调用
     if ( window.AlipayJSBridge ) {
       callback && callback()
@@ -187,7 +188,7 @@ const AuthProcess = (certifyId, url) => {
   }
   // startBizService 接口仅在支付宝 10.0.15 及以上支持
   // 需要接入者自行做下版本兼容处理 ！！
-  function startAPVerify ( options, callback ) {
+  function startAPVerify ( options:object, callback:(verifyResult:object)=>Promise<void> ) {
     window.AlipayJSBridge.call( 'startBizService', {
       name: 'open-certify',
       param: JSON.stringify( options ),
@@ -203,7 +204,7 @@ const AuthProcess = (certifyId, url) => {
     startAPVerify ({
       certifyId,
       url,
-    }, async ( verifyResult ) => {
+    }, async (verifyResult: any ) => {
       if (!verifyResult.result){
         toCancelAuthorize()
       } else {

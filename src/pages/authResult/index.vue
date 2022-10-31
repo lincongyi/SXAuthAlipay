@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Dialog } from 'vant'
 import certificationSuccessfulImage from '@images/certification-successful.png'
 import certificationFailedImage from '@images/certification-failed.png'
@@ -42,7 +42,7 @@ const resultList = [
     resultTxt: '认证失败',
     resultImage: certificationFailedImage
   },
-]
+] as const
 const authMode = ref(0) // 认证模式
 const authData = ref('') // 认证结果
 // 每项认证步骤的结果
@@ -53,8 +53,8 @@ const authResultStep = computed(() => {
     {key: '人像比对', value: 2}
   ]
   if (authMode.value){
-    let {type} = modeList.find((item) => item.mode.includes(authMode.value))
-    let data = authData.value.slice(0, type)
+    let modeItem = modeList.find((item) => item.mode.includes(authMode.value))
+    let data = authData.value.slice(0, modeItem?.type)
     for (let i=0;i<data.length;i++){
       let value = Number(data[i])===0 ? 1:0
       result[i].value = value

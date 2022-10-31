@@ -3,10 +3,10 @@ import vue from '@vitejs/plugin-vue'
 import styleImport, { VantResolve } from 'vite-plugin-style-import'
 import AutoImport from 'unplugin-auto-import/vite'
 import { viteVConsole } from 'vite-plugin-vconsole'
-const path = require('path')
+import path from 'path'
 
 // https://vitejs.dev/config/
-export default ({mode}) =>
+export default ({ mode }) =>
   defineConfig({
     base: './',
     plugins: [
@@ -19,20 +19,20 @@ export default ({mode}) =>
           filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
           globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
         },
-        dts: './auto-import.d.ts'
+        dts: './auto-import.d.ts',
       }),
       viteVConsole({
         entry: [
-          path.resolve('src/pages/demo/main.js'),
-          path.resolve('src/pages/auth/main.js'),
-          path.resolve('src/pages/authResult/main.js'),
+          path.resolve('src/pages/demo/main.ts'),
+          path.resolve('src/pages/auth/main.ts'),
+          path.resolve('src/pages/authResult/main.ts'),
         ], // entry for each page, different from the above
         localEnabled: mode === 'development',
         enabled: mode === 'development',
         config: {
           maxLogNumber: 1000,
-          theme: 'dark'
-        }
+          theme: 'dark',
+        },
       }),
       styleImport({
         resolves: [VantResolve()],
@@ -44,12 +44,6 @@ export default ({mode}) =>
         '@images': path.resolve(__dirname, './src/assets'),
       },
     },
-    pluginOptions: {
-      'style-resources-loader': {
-        preProcessor: 'scss',
-        patterns: []
-      }
-    },
     build: {
       rollupOptions: {
         input: {
@@ -59,7 +53,7 @@ export default ({mode}) =>
           toMiniProgram: path.resolve(__dirname, 'toMiniProgram.html'),
           authResult: path.resolve(__dirname, 'authResult.html'),
           authTask: path.resolve(__dirname, 'authTask.html'),
-        }
+        },
       },
     },
     server: {
@@ -77,6 +71,6 @@ export default ({mode}) =>
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
-      }
-    }
+      },
+    },
   })

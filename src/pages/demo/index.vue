@@ -12,7 +12,6 @@
         />
         <van-field
           v-model="clientSecret"
-          type="clientSecret"
           name="密码"
           label="密码"
           placeholder="密码"
@@ -57,19 +56,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {getAccessToken, getCertToken} from '@/api/demo/index'
 import { Toast } from 'vant'
-const clientId = ref(import.meta.env.VITE_CLIENT_ID) // 账号
-const clientSecret = ref(import.meta.env.VITE_CLIENT_SECRET) // 密码
-const mode = ref(66) // 认证模式
-const username = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 姓名
-const idNum = process.env.NODE_ENV === 'production' ? ref('') : ref('') // 证件号码
-const authModeList = ['H5', 'MINI'] // H5（生活号） or MINI（小程序）
+import { loadEnv } from '@/utils/index'
+
+const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
+const clientId = ref(VITE_CLIENT_ID) // 账号
+const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
+const mode = ref<number|string>(66) // 认证模式
+const username = ref('') // 姓名
+const idNum = ref('') // 证件号码
+const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
 
 const handleSubmit = async () => {
-  let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value})
+  let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as {accessToken: string}
   let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
   let params = {
     accessToken,
@@ -87,17 +89,19 @@ const handleSubmit = async () => {
     }
   }
 
-  let {tokenInfo} = await getCertToken(params)
+  let {tokenInfo} = await getCertToken(params) as unknown as {tokenInfo: {certToken: string}}
   let {certToken} = tokenInfo
 
   let target = Number(authModeChecked.value)
-  let url
+  let url: string
   if (target) { // 通过空白引导页指引跳转生活号或者小程序
     let env = authModeList[target - 1]
-    let domain = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_DEMO_BASE_URL : 'https://sfrz.wsbs.shxga.gov.cn'}`
+    const { MODE, VITE_DEMO_BASE_URL } = loadEnv()
+    let domain = `${MODE === 'production' ? VITE_DEMO_BASE_URL : 'https://sfrz.wsbs.shxga.gov.cn'}`
     url = `${domain}/authgzh/auth?certToken=${certToken}&env=${env}`
   } else { // 直接跳转生活号
-    let domain = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_AUTH_BASE_URL : import.meta.env.VITE_PROXY_AUTH_BASE_URL}`
+    const { MODE, VITE_AUTH_BASE_URL, VITE_PROXY_AUTH_BASE_URL } = loadEnv()
+    let domain = `${MODE === 'production' ? VITE_AUTH_BASE_URL : VITE_PROXY_AUTH_BASE_URL}`
     url = `${domain}/auth?certToken=${certToken}`
   }
   window.location.replace(url)
