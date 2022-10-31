@@ -6,7 +6,7 @@ window.DEV = {
     app_id: 'system',
     app_secret: '12345'
   },
-  successUrl: encodeURIComponent('/'), // 成功的回调地址, 可通过url传参方式传入, url传参方式优先级高于配置文件
+  successUrl: encodeURIComponent('https://sfrz.wsbs.shxga.gov.cn/sxauthalipay/yc/index.html'), // 成功的回调地址, 可通过url传参方式传入, url传参方式优先级高于配置文件
   successDelayTime: 3000, // 检测成功之后延迟多久跳转
   failedUrl: encodeURIComponent('/'), // 失败的回调地址, 可通过url传参方式传入, url传参方式优先级高于配置文件
   returnUrl: encodeURIComponent('/'), // 返回的URL, 可通过url传参方式传入, url传参方式优先级高于配置文件
