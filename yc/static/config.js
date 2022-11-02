@@ -1,5 +1,6 @@
 window.DEV = {
-  uploadUrl: 'https://videoliveness.cloudwalk.com:20046/liveness/action/video', // 上传视频的URL
+  // uploadUrl: 'https://videoliveness.cloudwalk.com:20046/liveness/action/video', // 上传视频的URL
+  uploadUrl: 'https://videoliveness.cloudwalk.com:20046/liveness/silence/video', // 上传视频的URL
   actionNum: 2, // 动作个数 1-3
   uploadParameter: {
     // 上传的参数配置
