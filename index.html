@@ -7,6 +7,11 @@
     <title>Vite App</title>
   </head>
   <body>
+    <script async>
+      if (navigator.userAgent.indexOf('AliApp') > -1) {
+        document.writeln('<script src="https://appx/web-view.min.js"' + '>' + '<' + '/' + 'script>');
+      }
+    </script>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>

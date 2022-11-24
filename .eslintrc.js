@@ -35,5 +35,6 @@ module.exports = {
     'no-multiple-empty-lines': [2, {'max': 2}],
     'no-useless-escape': 0,
     'vue/multi-word-component-names': 0,
+    'vue/comment-directive': 'off'
   }
 }
