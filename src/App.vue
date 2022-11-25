@@ -14,13 +14,17 @@ import HelloWorld from './components/HelloWorld.vue'
 const toDemo = () => {
   window.location.href = './demo.html'
 }
+
+let isAlipay = navigator.userAgent.indexOf('AliApp') > -1 // 是否支付宝环境
+let globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获取实例对象
+
 const setParams = () => {
-  console.log(my)
-  my.postMessage({name: '测试webview通讯'})
+  console.log(globalEnv)
+  globalEnv.postMessage({name: '测试webview通讯'})
 }
 const handleBack = () => {
-  my.postMessage({txt: '小程序返回'})
-  my.navigateBack({delta: 1})
+  globalEnv.postMessage({txt: '小程序返回'})
+  globalEnv.navigateBack({delta: 1})
 }
 // 网页向小程序 postMessage 消息
 // my.postMessage({name: '测试web-view'})
