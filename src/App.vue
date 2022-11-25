@@ -20,10 +20,10 @@ let globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获�
 
 const setParams = () => {
   console.log(globalEnv)
-  globalEnv.postMessage({name: '测试webview通讯'})
+  globalEnv.postMessage({data: '测试webview通讯'})
 }
 const handleBack = () => {
-  globalEnv.postMessage({txt: '小程序返回'})
+  globalEnv.postMessage({data: '小程序返回'})
   globalEnv.navigateBack({delta: 1})
 }
 // 网页向小程序 postMessage 消息
