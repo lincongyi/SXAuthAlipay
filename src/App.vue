@@ -18,6 +18,13 @@ const toDemo = () => {
 let isAlipay = navigator.userAgent.indexOf('AliApp') > -1 // 是否支付宝环境
 let globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获取实例对象
 
+let url = window.location.href
+const queryString = url.substring(url.indexOf('?')+1)
+const params = new URLSearchParams(queryString)
+console.log('name', params.get('name'))
+console.log('age', params.get('age'))
+
+
 const setParams = () => {
   console.log(globalEnv)
   globalEnv.postMessage({data: '测试webview通讯'})
