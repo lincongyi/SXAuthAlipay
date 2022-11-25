@@ -5,7 +5,7 @@
     <link rel="icon" href="./favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
-    <script type="module" crossorigin src="./assets/index.cf5214c0.js"></script>
+    <script type="module" crossorigin src="./assets/index.c22bc65c.js"></script>
     <link rel="modulepreload" href="./assets/normalize.c5bfbc35.js">
     <link rel="modulepreload" href="./assets/logo.9e2f423b.js">
     <link rel="stylesheet" href="./assets/normalize.9d328b21.css">
@@ -15,6 +15,8 @@
     <script async>
       if (navigator.userAgent.indexOf('AliApp') > -1) {
         document.writeln('<script src="https://appx/web-view.min.js"' + '>' + '<' + '/' + 'script>');
+      } else {
+        document.writeln('<script src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"'+'>'+'<'+'/'+'script>')
       }
     </script>
     <div id="app"></div>
