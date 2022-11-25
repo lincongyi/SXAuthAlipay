@@ -5,6 +5,8 @@
   <van-button type="success" @click="toDemo">跳转到demo</van-button>
   <van-button type="primary" @click="setParams">webView传参</van-button>
   <van-button type="primary" @click="handleBack">小程序返回</van-button>
+  <div>name:{{name}}</div>
+  <div>age:{{age}}</div>
 </template>
 
 <script setup lang="ts">
@@ -21,8 +23,8 @@ let globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获�
 let url = window.location.href
 const queryString = url.substring(url.indexOf('?')+1)
 const params = new URLSearchParams(queryString)
-console.log('name', params.get('name'))
-console.log('age', params.get('age'))
+const name = ref(params.get('name'))
+const age = ref(params.get('age'))
 
 
 const setParams = () => {
