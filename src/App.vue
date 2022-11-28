@@ -5,8 +5,7 @@
   <van-button type="success" @click="toDemo">跳转到demo</van-button>
   <van-button type="primary" @click="setParams">webView传参</van-button>
   <van-button type="primary" @click="handleBack">小程序返回</van-button>
-  <div>name:{{name}}</div>
-  <div>age:{{age}}</div>
+  <div>certToken:{{certToken}}</div>
 </template>
 
 <script setup lang="ts">
@@ -18,14 +17,19 @@ const toDemo = () => {
 }
 
 let isAlipay = navigator.userAgent.indexOf('AliApp') > -1 // 是否支付宝环境
-let globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获取实例对象
+let globalEnv:any
+try {
+  // eslint-disable-next-line no-undef
+  globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获取实例对象
+} catch (error) {
+  return false
+}
+
 
 let url = window.location.href
 const queryString = url.substring(url.indexOf('?')+1)
 const params = new URLSearchParams(queryString)
-const name = ref(params.get('name'))
-const age = ref(params.get('age'))
-
+const certToken = ref(params.get('certToken'))
 
 const setParams = () => {
   console.log(globalEnv)
