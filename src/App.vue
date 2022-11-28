@@ -22,9 +22,8 @@ try {
   // eslint-disable-next-line no-undef
   globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获取实例对象
 } catch (error) {
-  return false
+  console.log(error)
 }
-
 
 let url = window.location.href
 const queryString = url.substring(url.indexOf('?')+1)
@@ -32,7 +31,6 @@ const params = new URLSearchParams(queryString)
 const certToken = ref(params.get('certToken'))
 
 const setParams = () => {
-  console.log(globalEnv)
   globalEnv.postMessage({data: '测试webview通讯'})
 }
 const handleBack = () => {
