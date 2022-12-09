@@ -39,6 +39,13 @@
           maxlength="18"
           placeholder="证件号码"
         />
+        <van-field
+          v-model="v3Token"
+          name="v3Token"
+          label="v3 Token"
+          maxlength="18"
+          placeholder="v3 Token"
+        />
       </van-cell-group>
       <van-radio-group class="radio-box" v-model="authModeChecked">
         <div class="radio-title">直接跳转</div>
@@ -50,7 +57,8 @@
 
       </van-radio-group>
       <div style="margin: 16px;">
-        <van-button round block type="primary" native-type="submit">提交</van-button>
+        <van-button round block type="primary" native-type="submit">提交</van-button><br/>
+        <van-button round block type="primary" @click="handleV3">v3 token</van-button>
       </div>
     </van-form>
   </div>
@@ -69,6 +77,7 @@ const username = ref('') // 姓名
 const idNum = ref('') // 证件号码
 const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
+const v3Token = ref('')
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as {accessToken: string}
@@ -105,6 +114,19 @@ const handleSubmit = async () => {
     url = `${domain}/auth?certToken=${certToken}`
   }
   window.location.replace(url)
+}
+
+const handleV3 = () => {
+  if (!v3Token.value) return Toast({
+    message: `请输入token`,
+    forbidClick: true,
+  })
+  let domain = `${
+    import.meta.env.MODE === 'production'
+      ? import.meta.env.VITE_AUTH_BASE_URL
+      : import.meta.env.VITE_PROXY_AUTH_BASE_URL
+  }`
+  return window.location.href = `${domain}/authgzh/auth?certToken=${v3Token.value}`
 }
 
 onMounted(() => {
