@@ -219,7 +219,6 @@ const formatterDate = (type:string, value:string) => {
 onMounted(() => {
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(href.indexOf('?') + 1)
-  console.log(query)
   const urlParams = new URLSearchParams(query)
   const errorMsg = urlParams.get('errorMsg')
   if (errorMsg) return Toast({
