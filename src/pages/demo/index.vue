@@ -20,11 +20,14 @@
         />
         <van-field
           v-model="mode"
+          readonly
+          is-link
           name="认证模式"
           label="认证模式"
           placeholder="认证模式"
-          :rules="[{ required: true, message: '请填写认证模式' }]"
+          @click="showPicker = true"
         />
+
         <van-field
           v-model="username"
           name="姓名"
@@ -39,6 +42,25 @@
           maxlength="18"
           placeholder="证件号码"
         />
+        <template v-if="[16,18].includes(Number(mode))">
+          <van-divider content-position="left">证件有效期</van-divider>
+          <van-field
+            v-model="startDateToString"
+            readonly
+            is-link
+            name="起始日期"
+            label="起始日期"
+            @click="dateType = 0; showDatePicker = true"
+          />
+          <van-field
+            v-model="endDateToString"
+            readonly
+            is-link
+            name="截止日期"
+            label="截止日期"
+            @click="dateType = 1; showDatePicker = true"
+          />
+        </template>
         <van-field
           v-model="v3Token"
           name="v3Token"
@@ -60,24 +82,75 @@
         <van-button round block type="primary" native-type="submit">提交</van-button><br/>
         <van-button round block type="primary" @click="handleV3">v3 token</van-button>
       </div>
+
+      <van-popup v-model:show="showPicker" round position="bottom">
+        <van-picker
+          :columns="modeRange"
+          :defaultIndex="defaultIndex"
+          @cancel="showPicker = false"
+          @confirm="onConfirmMode"
+        />
+      </van-popup>
+
+      <van-popup v-model:show="showDatePicker" round position="bottom">
+        <van-datetime-picker
+          v-model="[startDate,endDate][dateType]"
+          title="选择日期"
+          type="date"
+          :min-date="currentRange[0]"
+          :max-date="currentRange[1]"
+          :formatter="formatterDate"
+          @confirm="onConfirmDate"
+        />
+      </van-popup>
     </van-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import {getAccessToken, getCertToken} from '@/api/demo/index'
+import { getAccessToken, getCertToken } from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv } from '@/utils/index'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
 const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
-const mode = ref<number|string>(66) // 认证模式
+const showPicker = ref(false) // 认证模式弹出层
+const modeRange = [16, 18, 64, 66] // 认证模式范围
+const mode = ref<number|string>(64) // 认证模式
+const defaultIndex = ref(modeRange.findIndex((item) => item===mode.value)) // 默认认证模式index
 const username = ref('') // 姓名
 const idNum = ref('') // 证件号码
+const showDatePicker = ref(false) // 日期选择器弹出层
+
+const dateType = ref(0) // 日期类型：0-起始日期；1-截止日期
+const startDateRange = [new Date(2000, 0, 1), new Date()]
+const endDateRange = [new Date(), new Date(2050, 11, 31)]
+const currentRange = ref([startDateRange, endDateRange][dateType.value])
+const startDate = ref(new Date(2000, 0, 1))
+const endDate = ref(new Date(2030, 11, 31))
+
 const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
 const v3Token = ref('')
+
+
+// 选择模式
+const onConfirmMode = (data:number) => {
+  mode.value = data
+  showPicker.value = false
+}
+
+// 选择日期
+const onConfirmDate = (value:Date) => {
+  if (!dateType.value) startDate.value = value
+  else endDate.value = value
+  showDatePicker.value = false
+}
+
+// 格式化日期
+const startDateToString = computed(() => startDate.value.toLocaleDateString())
+const endDateToString = computed(() => endDate.value.toLocaleDateString())
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as {accessToken: string}
@@ -118,7 +191,7 @@ const handleSubmit = async () => {
 
 const handleV3 = () => {
   if (!v3Token.value) return Toast({
-    message: `请输入token`,
+    message: '请输入token',
     forbidClick: true,
   })
   let domain = `${
@@ -129,9 +202,24 @@ const handleV3 = () => {
   return window.location.href = `${domain}/authgzh/auth?certToken=${v3Token.value}`
 }
 
+// 格式化日期选择器显示
+const formatterDate = (type:string, value:string) => {
+  if (type === 'year') {
+    return `${value}年`
+  }
+  if (type === 'month') {
+    return `${value}月`
+  }
+  if (type === 'day') {
+    return `${value}日`
+  }
+  return value
+}
+
 onMounted(() => {
   let href = decodeURIComponent(window.location.href)
   let query = href.substring(href.indexOf('?') + 1)
+  console.log(query)
   const urlParams = new URLSearchParams(query)
   const errorMsg = urlParams.get('errorMsg')
   if (errorMsg) return Toast({

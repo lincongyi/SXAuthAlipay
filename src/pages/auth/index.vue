@@ -63,7 +63,9 @@
   <van-action-sheet v-model:show="isActionSheetShow" title="认证授权">
     <div class="content">
       <div class="upper-tips" v-html="beforeAuth"></div>
-      <div class="center-tips">本次认证需要通过人脸识别验证身份信息</div>
+      <template v-if="!([16, 64].includes(mode))">
+        <div class="center-tips">本次认证需要通过人脸识别验证身份信息</div>
+      </template>
       <van-divider />
       <div class="lower-tips">
         <van-checkbox v-model="isChecked" shape="square"></van-checkbox>
@@ -107,11 +109,12 @@ if (!url.includes('&')){
     window.history.go(-1)
   }, 1500)
 }
-const query = url.substring(url.indexOf('?')+1)
-
+const query = url.substring(url.indexOf('?') + 1)
 const urlParams = new URLSearchParams(query)
 const loginToken = urlParams.get('loginToken') || ''
 const certToken = urlParams.get('certToken') || ''
+
+const mode = ref(0) // 认证模式
 
 const beforeAuth = ref('')
 const beforeProtocol = ref('')
@@ -122,7 +125,8 @@ const certifyId = ref('')
 
 onMounted(async() => {
   // 校验certToken 或 userId 是否有绑定用户的信息
-  let {data: identityInfo} = await checkIdentityInfo({loginToken, certToken})
+  let { data: identityInfo } = await checkIdentityInfo({ loginToken, certToken })
+  mode.value = identityInfo.mode
   // 用户状态（0：已登录 1：certToken中包含身份信息 2：certToken中不包含身份信息）
   backPageUrl.value = identityInfo.foreBackUrl
   if (identityInfo.userStatus!==2){
@@ -162,13 +166,24 @@ const handleSubmit = () => {
 
 const toAuthorize = async() => {
   if (!isChecked.value) return Toast('请同意《服务协议》')
-  // 获取调起支付宝刷脸url
-  let {data} = await alipayAuthInit({certToken, fullName: fullName.value, idNum: idNum.value})
-  certifyId.value = data.certifyId
-  certifyUrl.value = data.certifyUrl
-  isActionSheetShow.value = false
-  isChecked.value = false
-  AuthProcess(certifyId.value, certifyUrl.value)
+  if ([16, 64].includes(mode.value)) { // 16，64模式无需走活检流程
+    let params = {
+      loginToken,
+      certToken,
+      fullName: fullName.value,
+      idNum: idNum.value,
+      mode: mode.value,
+    }
+    followUpEvent(params)
+  } else {
+    // 获取调起支付宝刷脸url
+    let {data} = await alipayAuthInit({loginToken, certToken, fullName: fullName.value, idNum: idNum.value})
+    certifyId.value = data.certifyId || ''
+    certifyUrl.value = data.certifyUrl || ''
+    isActionSheetShow.value = false
+    isChecked.value = false
+    AuthProcess(certifyId.value, certifyUrl.value)
+  }
 }
 
 // 身份认证文档
@@ -211,16 +226,29 @@ const AuthProcess = (certifyId:string, url:string) => {
         // 认证结果回调触发, 以下处理逻辑为示例代码，开发者可根据自身业务特性来自行处理
         // 验证成功，接入方在此处处理后续的业务逻辑
         Toast(verifyResult.resultStatus === '9000'?'认证通过':'认证失败')
-        let {data} = await alipayAuthQuery({loginToken, certToken, fullName: fullName.value, idNum: idNum.value, certifyId: verifyResult.result.certifyId})
-        setTimeout(() => {
-          window.location.replace(data.foreBackUrl)
-        }, 1000)
+        let params = {
+          loginToken,
+          certToken,
+          fullName: fullName.value,
+          idNum: idNum.value,
+          mode: mode.value,
+          certifyId: verifyResult.result.certifyId
+        }
+        followUpEvent(params)
       }
     })
   })
   /**
     * 支付宝H5页面接入逻辑代码 end
    */
+}
+
+// 获取认证结果，并根据foreBackUrl返回
+const followUpEvent = async (params: object) => {
+  let { data } = await alipayAuthQuery(params)
+  setTimeout(() => {
+    window.location.replace(data.foreBackUrl)
+  }, 1000)
 }
 </script>
 
