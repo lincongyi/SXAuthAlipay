@@ -65,7 +65,6 @@
           v-model="v3Token"
           name="v3Token"
           label="v3 Token"
-          maxlength="18"
           placeholder="v3 Token"
         />
       </van-cell-group>
