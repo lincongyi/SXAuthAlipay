@@ -198,7 +198,7 @@ const handleV3 = () => {
       ? import.meta.env.VITE_AUTH_BASE_URL
       : import.meta.env.VITE_PROXY_AUTH_BASE_URL
   }`
-  return window.location.href = `${domain}/authgzh/auth?certToken=${v3Token.value}`
+  return window.location.href = `${domain}/auth?certToken=${v3Token.value}`
 }
 
 // 格式化日期选择器显示
