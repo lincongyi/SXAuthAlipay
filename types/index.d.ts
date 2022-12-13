@@ -18,6 +18,8 @@ declare interface ViteEnv {
   VITE_PROXY_AUTH_BASE_URL?: string;
   VITE_DEMO_BASE_URL: string;
   VITE_PROXY_DEMO_BASE_URL?: string;
+  VITE_V3_BASE_URL: string;
+  VITE_PROXY_V3_BASE_URL?: string;
   VITE_CLIENT_ID: 'dabby_dev_al';
   VITE_CLIENT_SECRET: 'dabby_dev_al';
   VITE_SERVICE_AGREEMENT: string;

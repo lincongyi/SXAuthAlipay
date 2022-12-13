@@ -72,6 +72,12 @@ export default ({ mode }) =>
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
+        // v3网证标识专用
+        [loadEnv(mode, process.cwd()).VITE_V3_BASE_URL]: {
+          target: loadEnv(mode, process.cwd()).VITE_PROXY_V3_BASE_URL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/cpi/, ''),
+        },
       },
     },
   })

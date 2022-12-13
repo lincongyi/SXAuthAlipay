@@ -61,12 +61,6 @@
             @click="dateType = 1; showDatePicker = true"
           />
         </template>
-        <van-field
-          v-model="v3Token"
-          name="v3Token"
-          label="v3 Token"
-          placeholder="v3 Token"
-        />
       </van-cell-group>
       <van-radio-group class="radio-box" v-model="authModeChecked">
         <div class="radio-title">直接跳转</div>
@@ -107,10 +101,10 @@
 </template>
 
 <script setup lang="ts">
-import { getAccessToken, getCertToken } from '@/api/demo/index'
+import { getAccessToken, getCertToken, simpauth } from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv } from '@/utils/index'
-import { keyToHex } from './v3crypt'
+import { v3Encrypt } from './v3crypt'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
@@ -119,8 +113,8 @@ const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
 const mode = ref<number|string>(64) // 认证模式
 const defaultIndex = ref(modeRange.findIndex((item) => item===mode.value)) // 默认认证模式index
-const username = ref('') // 姓名
-const idNum = ref('') // 证件号码
+const username = ref('林聪毅') // 姓名
+const idNum = ref('440105199203182415') // 证件号码
 const showDatePicker = ref(false) // 日期选择器弹出层
 
 const dateType = ref(0) // 日期类型：0-起始日期；1-截止日期
@@ -132,7 +126,6 @@ const endDate = ref(new Date(2030, 11, 31))
 
 const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
-const v3Token = ref('')
 
 
 // 选择模式
@@ -189,17 +182,30 @@ const handleSubmit = async () => {
   window.location.replace(url)
 }
 
-const handleV3 = () => {
-  if (!v3Token.value) return Toast({
-    message: '请输入token',
-    forbidClick: true,
-  })
-  let domain = `${
-    import.meta.env.MODE === 'production'
-      ? import.meta.env.VITE_AUTH_BASE_URL
-      : import.meta.env.VITE_PROXY_AUTH_BASE_URL
-  }`
-  return window.location.href = `${domain}/auth?certToken=${v3Token.value}`
+// 网证标识
+const handleV3 = async () => {
+  // let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
+  let foreBackUrl = 'https://sfrz.wsbs.shxga.gov.cn/sit/shanxiauthweb/transfer.html'
+  let params = {
+    authData: {
+      mode: 64,
+      idInfo: {
+        fullName: username.value,
+        idNum: idNum.value
+      }
+    }
+  }
+  let encryptParams = v3Encrypt(params, clientId.value)
+
+  // let result = await simpauth(encryptParams)
+  // console.log(result)
+  // let certToken
+  // let domain = `${
+  //   import.meta.env.MODE === 'production'
+  //     ? import.meta.env.VITE_AUTH_BASE_URL
+  //     : import.meta.env.VITE_PROXY_AUTH_BASE_URL
+  // }`
+  // return window.location.href = `${domain}/auth?certToken=${certToken}`
 }
 
 // 格式化日期选择器显示

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import { loadEnv } from '@/utils/index'
 
-const { VITE_DEMO_BASE_URL } = loadEnv()
+const { VITE_DEMO_BASE_URL, VITE_V3_BASE_URL } = loadEnv()
 
 /**
  * 获取accessToken
@@ -24,5 +24,17 @@ export function getCertToken(data?: object) {
     url: '/authreq',
     method: 'post',
     data,
+  })
+}
+
+/**
+ * 获取网证标识
+ */
+export function simpauth(data: object) {
+  return request({
+    baseURL: VITE_V3_BASE_URL,
+    url: '/simpauth',
+    method: 'post',
+    data
   })
 }

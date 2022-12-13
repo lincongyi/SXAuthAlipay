@@ -1,118 +1,49 @@
-import { sm2 } from 'sm-crypto'
-import { sm4 } from 'sm-crypto'
 import { v4 as uuidv4 } from 'uuid'
-
-const cipherMode = 0 // 加密模式： 1-C1C3C2，0-C1C2C3，默认为1
-
-// let keypair = sm2.generateKeyPairHex(); // 生成密钥对
-const keypair = {
-  privateKey:
-  'AMPADS+BSbpTPdgX+/yduAxH4ys5lONk4zPgB/NYSlAZ',
-  publicKey:
-  'BDzop8PNh8mH/Iifslhrc86Z14mxbUKGNUR5VR34F9E8PmEDcYqIdRaoG2gpzHVgcCHE8jl9YVVFGvu89do0pps='
-}
+import qs from 'qs'
+import { sm4Encrypt, sm2Encrypt, HexToBase64, sm2Sign, sm2VerifySign, keyToHex } from './utils'
 
 /**
-  * base64转16进制字符串
-  * @param {string} base64 base64
-  * @return {string} 16进制字符串
+ *
+ * @param {object} params 原始数据
+ * @param {string} clientId 账号
+ * @returns {object} 加密后返回的数据格式
  */
-export const keyToHex = (base64:string) => {
-  return arrayToHex(base64_decode(base64))
-}
+export const v3Encrypt = (params:object, clientId:string) => {
 
-const publicKey = keyToHex(keypair.publicKey) // 公钥-用于sm2验签
-const privateKey = keyToHex(keypair.privateKey) // 私钥-用于sm2签名
-const publicKeyPlatform = keyToHex('BF1bKDid/tOtJP71NlkwkvszkfdPkjpNGj2Z35IVM14qijMyuvlp3ohCAqWZ0J6h7UeAKRe/scFGhHosqfzzCng=') // 平台公钥-用于sm2加密sm4key
+  const sm4Key = uuidv4().replaceAll('-', '') // 原始sm4Key：32位16进制字符串
+  const sm4EncryptKey = sm2Encrypt(sm4Key) // 加密后的sm4Key
 
-const sm4Key = uuidv4().replaceAll('-', '') // sm4Key
+  const data = sm4Encrypt(JSON.stringify(params), sm4Key) // 加密明文数据
+  const requestId = uuidv4().replaceAll('-', '') // 请求标识：32位16进制字符串
+  const timestamp = Date.now() // 当前时间戳
 
-/**
- * sm4加密明文
- * @param {string} data 需要加密的明文数据
- * @return {string} sm4加密后的明文数据
- */
-export const sm4Encrypt = (data:string) => sm4.encrypt(data, sm4Key)
-
-/**
- * sm2加密密钥
- * @param {string} data 需要加密的sm4Key
- * @return {string} sm2加密后的密钥数据
- */
-const sm2Encrypt = () => `04${sm2.doEncrypt(sm4Key, publicKeyPlatform, cipherMode)}`
-
-export const sm4EncryptKey = sm2Encrypt() // 加密后的sm4Key
-
-/**
- * sm2解密密钥
- * @param {string} encryptData 加密的sm4Key
- * @return {string} sm2解密后的密钥数据
- */
-export const sm2Decrypt = (encryptData: string) => sm2.doDecrypt(encryptData, privateKey, cipherMode)
-
-/**
- * sm2签名
- * @param {string} data 需要签名的数据
- * @return {string} 签名后的数据
- */
-export const sm2Sign = (data: string) => sm2.doSignature(data, privateKey, { hash: true, publicKey, der: true })
-
-/**
- * sm2验签
- * @param {string} data 原始字符串
- * @param {string} sigValueHex 签名后的字符串
- * @return {string} 验签后的结果
- */
-export const sm2VerifySign = (data: string, sigValueHex: string) => sm2.doVerifySignature(data, sigValueHex, publicKey, { hash: true, publicKey, der: true })
-
-/**
- * base64转16进制数组
- */
-const base64_decode = (input:string) => {
-  const output = []
-  let chr1, chr2, chr3
-  let enc1, enc2, enc3, enc4
-  let i = 0
-
-  const orig_input = input
-  input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '')
-  if (orig_input !== input)
-    alert ('Warning! Characters outside Base64 range in input string ignored.')
-  if (input.length % 4) {
-    alert ('Error: Input length is not a multiple of 4 bytes.')
-    return ''
+  const encryptData = {
+    clientId,
+    data,
+    requestId,
+    sm4Key: HexToBase64(sm4EncryptKey),
+    timestamp,
   }
-
-  let j=0
-  const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
-  while (i < input.length) {
-
-    enc1 = keyStr.indexOf(input.charAt(i++))
-    enc2 = keyStr.indexOf(input.charAt(i++))
-    enc3 = keyStr.indexOf(input.charAt(i++))
-    enc4 = keyStr.indexOf(input.charAt(i++))
-
-    chr1 = (enc1 << 2) | (enc2 >> 4)
-    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2)
-    chr3 = ((enc3 & 3) << 6) | enc4
-
-    output[j++] = chr1
-    if (enc3 !== 64)
-      output[j++] = chr2
-    if (enc4 !== 64)
-      output[j++] = chr3
-
-  }
-  return output
+  const str = formatterToString(encryptData)
+  // const str2 = qs.stringify(encryptData, { sort: (a, b) => a.localeCompare(b) }).replaceAll('%2F', '\/').replaceAll('%2B', '+')
+  // console.log('比对字符串：', str===str2)
+  const sign = (sm2Sign(str))
+  // const test = qs.stringify({ a: 'asdf/asd+222/2223++/4' })
+  // let result = test.replaceAll(\%2f\,)
+  // console.log(result)
+  // return { ...encryptData, sign }
+  const signData = sm2Sign('123')
+  const signValue = 'MEQCICDBKgxmVlX1vdRYTxFhy2Ciy5lSs5mvlfQ7oPygE346AiBDWSWdFn3wtnPJtEs+P48zY7BhhdJjJLSwpZEP9CYXIw=='
+  console.log('signData', signData)
+  console.log('signValue', keyToHex(signValue))
+  console.log('验签结果：', sm2VerifySign('123', keyToHex(signValue)))
 }
 
-/**
- * 字节数组转成16进制串
- */
-const arrayToHex = (arr: number[] | '') => {
-  if (!arr) return ''
-  return arr.map(item => {
-    const itemToString = item.toString(16)
-    return itemToString.length === 1 ? '0' + item : item
-  }).join('')
+function formatterToString(data:Record<string, string|number>) {
+  let result = ''
+  // const keys = Object.keys(data)
+  for (const item in data) {
+    result += `${item}=${data[item]}&`
+  }
+  return result.substring(0, result.length-1)
 }
