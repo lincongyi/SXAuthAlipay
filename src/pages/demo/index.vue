@@ -110,6 +110,7 @@
 import { getAccessToken, getCertToken } from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv } from '@/utils/index'
+import { keyToHex } from './v3crypt'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号

@@ -13,12 +13,16 @@
   "dependencies": {
     "axios": "^0.27.2",
     "normalize.css": "^8.0.1",
+    "sm-crypto": "^0.3.11",
+    "uuid": "^9.0.0",
     "vant": "^3.4.9",
     "vconsole": "^3.14.6",
     "vue": "^3.2.25"
   },
   "devDependencies": {
     "@types/node": "^18.7.14",
+    "@types/sm-crypto": "^0.3.0",
+    "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "@vitejs/plugin-vue": "^2.3.3",
