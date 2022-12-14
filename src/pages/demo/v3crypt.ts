@@ -26,6 +26,6 @@ export const v3Encrypt = (params:object, clientId:string) => {
   }
   // 格式化字符串用作签名
   const formatterEncryptData = qs.stringify(encryptData, { sort: (a, b) => a.localeCompare(b) }).replaceAll('%2F', '/').replaceAll('%2B', '+')
-  const sign = (sm2Sign(formatterEncryptData))
+  const sign = HexToBase64(sm2Sign(formatterEncryptData))
   return { ...encryptData, sign }
 }
