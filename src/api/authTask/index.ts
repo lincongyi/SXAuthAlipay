@@ -1,6 +1,5 @@
-import request from '@/utils/request'
+import { service as request } from '@/utils/request'
 import { loadEnv } from '@/utils/index'
-import { AxiosPromise } from 'axios'
 const baseURL = 'https://sfrz.wsbs.shxga.gov.cn'
 
 const { VITE_DEMO_BASE_URL } = loadEnv()
@@ -14,7 +13,7 @@ type TCertToken = {
   }
 }
 export function getCertToken(data?: object): Promise<TCertToken> {
-  let url = `${process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL}/fama/demo/getcerttoken`
+  const url = `${process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL}/fama/demo/getcerttoken`
   return request.post(url, data)
 }
 
@@ -31,6 +30,6 @@ type TGetCertTokenImg = {
   }
 }
 export function getCertTokenImg(data?: object): Promise<TGetCertTokenImg> {
-  let url = `${process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL}/fama/demo/getcerttokenimg`
+  const url = `${process.env.NODE_ENV === 'production' ? VITE_DEMO_BASE_URL : baseURL}/fama/demo/getcerttokenimg`
   return request.post(url, data)
 }

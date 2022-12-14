@@ -196,9 +196,8 @@ const handleV3 = async () => {
     }
   }
   let encryptParams = v3Encrypt(params, clientId.value)
-
-  // let result = await simpauth(encryptParams)
-  // console.log(result)
+  let result = await simpauth(encryptParams)
+  console.log(result)
   // let certToken
   // let domain = `${
   //   import.meta.env.MODE === 'production'

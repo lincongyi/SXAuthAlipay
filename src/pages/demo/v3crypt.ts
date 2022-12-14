@@ -24,26 +24,8 @@ export const v3Encrypt = (params:object, clientId:string) => {
     sm4Key: HexToBase64(sm4EncryptKey),
     timestamp,
   }
-  const str = formatterToString(encryptData)
-  // const str2 = qs.stringify(encryptData, { sort: (a, b) => a.localeCompare(b) }).replaceAll('%2F', '\/').replaceAll('%2B', '+')
-  // console.log('比对字符串：', str===str2)
-  const sign = (sm2Sign(str))
-  // const test = qs.stringify({ a: 'asdf/asd+222/2223++/4' })
-  // let result = test.replaceAll(\%2f\,)
-  // console.log(result)
-  // return { ...encryptData, sign }
-  const signData = sm2Sign('123')
-  const signValue = 'MEQCICDBKgxmVlX1vdRYTxFhy2Ciy5lSs5mvlfQ7oPygE346AiBDWSWdFn3wtnPJtEs+P48zY7BhhdJjJLSwpZEP9CYXIw=='
-  console.log('signData', signData)
-  console.log('signValue', keyToHex(signValue))
-  console.log('验签结果：', sm2VerifySign('123', keyToHex(signValue)))
-}
-
-function formatterToString(data:Record<string, string|number>) {
-  let result = ''
-  // const keys = Object.keys(data)
-  for (const item in data) {
-    result += `${item}=${data[item]}&`
-  }
-  return result.substring(0, result.length-1)
+  // 格式化字符串用作签名
+  const formatterEncryptData = qs.stringify(encryptData, { sort: (a, b) => a.localeCompare(b) }).replaceAll('%2F', '/').replaceAll('%2B', '+')
+  const sign = (sm2Sign(formatterEncryptData))
+  return { ...encryptData, sign }
 }

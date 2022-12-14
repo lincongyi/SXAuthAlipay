@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import { service as request } from '@/utils/request'
 
 /**
   * 校验certToken 或 userId 是否有绑定用户的信息

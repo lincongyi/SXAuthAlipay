@@ -59,10 +59,7 @@ export const sm2Sign = (data: string) => sm2.doSignature(data, privateKey, { has
  * @param {string} sigValueHex 签名后的字符串
  * @return {string} 验签后的结果
  */
-// export const sm2VerifySign = (data: string, sigValueHex: string) => sm2.doVerifySignature(data, sigValueHex, publicKey, { hash: true, publicKey, der: true })
-export const sm2VerifySign = (data:string, sigValueHex:string) => {
-  return sm2.doVerifySignature(data, sigValueHex, publicKey, { hash: true, publicKey, der: true })
-}
+export const sm2VerifySign = (data: string, sigValueHex: string) => sm2.doVerifySignature(data, sigValueHex, publicKey, { hash: true, publicKey, der: true })
 /**
  * base64转16进制数组
  */
@@ -111,7 +108,7 @@ function arrayToHex (arr: number[] | ''){
   if (!arr) return ''
   return arr.map(item => {
     const itemToString = item.toString(16)
-    return itemToString.length === 1 ? '0' + item : item
+    return itemToString.length === 1 ? '0' + itemToString : itemToString
   }).join('')
 }
 

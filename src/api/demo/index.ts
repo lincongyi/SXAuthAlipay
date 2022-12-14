@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import { service as request, v3Service } from '@/utils/request'
 import { loadEnv } from '@/utils/index'
 
 const { VITE_DEMO_BASE_URL, VITE_V3_BASE_URL } = loadEnv()
@@ -31,7 +31,7 @@ export function getCertToken(data?: object) {
  * 获取网证标识
  */
 export function simpauth(data: object) {
-  return request({
+  return v3Service({
     baseURL: VITE_V3_BASE_URL,
     url: '/simpauth',
     method: 'post',
