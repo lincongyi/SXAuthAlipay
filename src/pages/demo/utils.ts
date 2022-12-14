@@ -1,6 +1,5 @@
 import { sm2 } from 'sm-crypto'
 import { sm4 } from 'sm-crypto'
-import { v4 as uuidv4 } from 'uuid'
 
 const cipherMode = 0 // 加密模式： 1-C1C3C2，0-C1C2C3，默认为1
 

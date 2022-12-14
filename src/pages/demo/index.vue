@@ -104,7 +104,7 @@
 import { getAccessToken, getCertToken, simpauth } from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv } from '@/utils/index'
-import { v3Encrypt } from './v3crypt'
+import { v3Sign, v3VertifySign } from './v3crypt'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
@@ -195,9 +195,11 @@ const handleV3 = async () => {
       }
     }
   }
-  let encryptParams = v3Encrypt(params, clientId.value)
-  let result = await simpauth(encryptParams)
-  console.log(result)
+  let encryptParams = v3Sign(params, clientId.value) // 1.数据签名
+  let { sign, msg, code, ...rest } = await simpauth(encryptParams) // 2.提交签名后的数据
+  let verifySign = await v3VertifySign(rest, sign)// 得到响应数据后，先验签
+  console.log(verifySign)
+
   // let certToken
   // let domain = `${
   //   import.meta.env.MODE === 'production'
