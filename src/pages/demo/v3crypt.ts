@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import qs from 'qs'
-import { sm4Encrypt, sm2Encrypt, HexToBase64, sm2Sign, sm2VerifySign, keyToHex } from './utils'
+import { sm4Encrypt, sm2Encrypt, HexToBase64, sm2Sign, sm2VerifySign, base64ToHex } from './utils'
 
 /**
  * 格式化字符串用作签名
@@ -12,16 +12,17 @@ const sortParams = (params:object) => {
 }
 
 let sm4Key:string // 原始sm4Key：32位16进制字符串
+let sm4EncryptKey:string // 加密后的sm4Key
 
 /**
- * 返回等候签名的数据
+ * 返回格式化数据+签名内容
  * @param {object} params 原始数据
  * @param {string} clientId 账号
  * @returns {object} 加密后返回的数据格式
  */
 export const v3Sign = (params:object, clientId:string) => {
   sm4Key = uuidv4().replaceAll('-', '') // 原始sm4Key：32位16进制字符串
-  const sm4EncryptKey = sm2Encrypt(sm4Key) // 加密后的sm4Key
+  sm4EncryptKey = sm2Encrypt(sm4Key) // 加密后的sm4Key
   const data = sm4Encrypt(JSON.stringify(params), sm4Key) // 加密明文数据
   const requestId = uuidv4().replaceAll('-', '') // 请求标识：32位16进制字符串
   const timestamp = Date.now() // 当前时间戳
@@ -34,7 +35,6 @@ export const v3Sign = (params:object, clientId:string) => {
     timestamp,
   }
   const formatterEncryptData = sortParams(encryptData)
-  console.log('encryptData', encryptData)
   const sign = HexToBase64(sm2Sign(formatterEncryptData))
   return { ...encryptData, sign }
 }
@@ -46,10 +46,10 @@ export const v3Sign = (params:object, clientId:string) => {
  * @returns {boolean} 验签结果
  */
 export const v3VertifySign = (params:object, sign: string) => {
-  console.log('all params', {...params, clientId: 'dabby_test', sm4Key: HexToBase64(sm4Key)})
-  const formatterParams = sortParams({...params, clientId: 'dabby_test', sm4Key: HexToBase64(sm4Key)}).replaceAll('%3D', '=')
+  console.log('all params', {...params, clientId: 'dabby_test', sm4Key: HexToBase64(sm4EncryptKey)})
+  const formatterParams = sortParams({...params, clientId: 'dabby_test', sm4Key: HexToBase64(sm4EncryptKey)}).replaceAll('%3D', '=')
   console.log('formatterParams', formatterParams)
-  const isVertified = sm2VerifySign(formatterParams, keyToHex(sign))
+  const isVertified = sm2VerifySign(formatterParams, base64ToHex(sign))
 
   return isVertified
 }

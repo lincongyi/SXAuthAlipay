@@ -16,13 +16,13 @@ const keypair = {
   * @param {string} base64 base64
   * @return {string} 16进制字符串
  */
-export const keyToHex = (base64:string) => {
+export const base64ToHex = (base64:string) => {
   return arrayToHex(base64_decode(base64))
 }
 
-const publicKey = keyToHex(keypair.publicKey) // 公钥-用于sm2验签
-const privateKey = keyToHex(keypair.privateKey) // 私钥-用于sm2签名
-const publicKeyPlatform = keyToHex('BF1bKDid/tOtJP71NlkwkvszkfdPkjpNGj2Z35IVM14qijMyuvlp3ohCAqWZ0J6h7UeAKRe/scFGhHosqfzzCng=') // 平台公钥-用于sm2加密sm4key
+const publicKey = base64ToHex(keypair.publicKey) // 公钥-用于sm2验签
+const privateKey = base64ToHex(keypair.privateKey) // 私钥-用于sm2签名
+const publicKeyPlatform = base64ToHex('BF1bKDid/tOtJP71NlkwkvszkfdPkjpNGj2Z35IVM14qijMyuvlp3ohCAqWZ0J6h7UeAKRe/scFGhHosqfzzCng=') // 平台公钥-用于sm2加密sm4key
 
 /**
  * sm4加密明文

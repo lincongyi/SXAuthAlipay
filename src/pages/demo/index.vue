@@ -196,6 +196,7 @@ const handleV3 = async () => {
     }
   }
   let encryptParams = v3Sign(params, clientId.value) // 1.数据签名
+  console.log('encryptParams', encryptParams)
   let { sign, msg, code, ...rest } = await simpauth(encryptParams) // 2.提交签名后的数据
   let verifySign = await v3VertifySign(rest, sign)// 得到响应数据后，先验签
   console.log(verifySign)
