@@ -32,6 +32,13 @@ const publicKeyPlatform = base64ToHex('BF1bKDid/tOtJP71NlkwkvszkfdPkjpNGj2Z35IVM
 export const sm4Encrypt = (data:string, sm4Key:string) => sm4.encrypt(data, sm4Key)
 
 /**
+ * sm4解密数据
+ * @param {string} data 需要解密的数据
+ * @return {string} sm4解密后的数据
+ */
+export const sm4Decrypt = (data:string, sm4Key:string) => sm4.decrypt(data, sm4Key)
+
+/**
  * sm2加密密钥
  * @param {string} sm4Key 需要加密的sm4Key
  * @return {string} sm2加密后的密钥数据

@@ -101,10 +101,10 @@
 </template>
 
 <script setup lang="ts">
-import { getAccessToken, getCertToken, simpauth } from '@/api/demo/index'
+import { getAccessToken, getCertToken, simpauth, gawzauthreq } from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv } from '@/utils/index'
-import { v3Sign, v3VertifySign } from './v3crypt'
+import { v3Sign, v3VertifySign, v3Decrypt } from './v3crypt'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
@@ -113,8 +113,8 @@ const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
 const mode = ref<number|string>(64) // 认证模式
 const defaultIndex = ref(modeRange.findIndex((item) => item===mode.value)) // 默认认证模式index
-const username = ref('林聪毅') // 姓名
-const idNum = ref('440105199203182415') // 证件号码
+const username = ref('') // 姓名
+const idNum = ref('') // 证件号码
 const showDatePicker = ref(false) // 日期选择器弹出层
 
 const dateType = ref(0) // 日期类型：0-起始日期；1-截止日期
@@ -196,18 +196,38 @@ const handleV3 = async () => {
     }
   }
   let encryptParams = v3Sign(params, clientId.value) // 1.数据签名
-  console.log('encryptParams', encryptParams)
-  let { sign, msg, code, ...rest } = await simpauth(encryptParams) // 2.提交签名后的数据
-  let verifySign = await v3VertifySign(rest, sign)// 得到响应数据后，先验签
+  let result = await simpauth(encryptParams) // 2.提交签名后的数据
+  let verifySign = v3VertifySign(result)// 得到响应数据后，先验签
   console.log(verifySign)
+  let resData = v3Decrypt(result.data) // 3.解密数据，返回明文信息
+  const { gawzbz } = JSON.parse(resData) // 4.解构数据，获得公安网证标识
 
-  // let certToken
-  // let domain = `${
-  //   import.meta.env.MODE === 'production'
-  //     ? import.meta.env.VITE_AUTH_BASE_URL
-  //     : import.meta.env.VITE_PROXY_AUTH_BASE_URL
-  // }`
-  // return window.location.href = `${domain}/auth?certToken=${certToken}`
+  let params2 = {
+    mode: mode.value,
+    authType: 'GzhRegular',
+    idInfo: {
+      gawzbz
+    },
+    businessInfo: {
+      subject: '身份验证'
+    },
+    extraParams: {
+      foreBackUrl
+    }
+  }
+  encryptParams = v3Sign(params2, clientId.value) // 5.数据签名
+  result = await gawzauthreq(encryptParams) // 6.提交签名后的数据
+  verifySign = v3VertifySign(result)// 得到响应数据后，先验签
+  console.log(verifySign)
+  resData = v3Decrypt(result.data) // 3.解密数据，返回明文信息
+  const { certToken } = JSON.parse(resData) // 4.解构数据，获得certToken
+
+  let domain = `${
+    import.meta.env.MODE === 'production'
+      ? import.meta.env.VITE_AUTH_BASE_URL
+      : import.meta.env.VITE_PROXY_AUTH_BASE_URL
+  }`
+  return window.location.href = `${domain}/auth?certToken=${certToken}`
 }
 
 // 格式化日期选择器显示

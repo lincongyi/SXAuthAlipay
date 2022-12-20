@@ -38,3 +38,15 @@ export function simpauth(data: object) {
     data
   })
 }
+
+/**
+ * 获取认证凭证
+ */
+export function gawzauthreq(data: object) {
+  return v3Service({
+    baseURL: VITE_V3_BASE_URL,
+    url: '/gawzauthreq',
+    method: 'post',
+    data
+  })
+}

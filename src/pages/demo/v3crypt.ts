@@ -1,14 +1,19 @@
 import { v4 as uuidv4 } from 'uuid'
-import qs from 'qs'
-import { sm4Encrypt, sm2Encrypt, HexToBase64, sm2Sign, sm2VerifySign, base64ToHex } from './utils'
+import { sm4Encrypt, sm4Decrypt, sm2Encrypt, HexToBase64, sm2Sign, sm2VerifySign, base64ToHex } from './utils'
 
 /**
- * 格式化字符串用作签名
- * @param {object} params 需要排序&格式化的数据
- * @returns {string} 排序后，格式化后的数据
+ * 格式化数据
+ * @param {object} obj 待处理的数据
+ * @returns {string} 格式化后的数据
  */
-const sortParams = (params:object) => {
-  return qs.stringify(params, { sort: (a, b) => a.localeCompare(b), charset: 'utf-8' }).replaceAll('%2F', '/').replaceAll('%2B', '+')
+const formatterFn = (obj:Record<string, any>) => {
+  const map = new Map()
+  const keyList = Object.keys(obj)
+  keyList.sort()
+  keyList.forEach((item) => map.set(item, obj[item]))
+  let result = ''
+  map.forEach((value, key) => result+=`${key}=${value}&`)
+  return result.slice(0, -1)
 }
 
 let sm4Key:string // 原始sm4Key：32位16进制字符串
@@ -34,22 +39,36 @@ export const v3Sign = (params:object, clientId:string) => {
     sm4Key: HexToBase64(sm4EncryptKey),
     timestamp,
   }
-  const formatterEncryptData = sortParams(encryptData)
+  const formatterEncryptData = formatterFn(encryptData)
   const sign = HexToBase64(sm2Sign(formatterEncryptData))
   return { ...encryptData, sign }
 }
 
+type v3Response = {
+  code:number
+  data:string
+  msg:string
+  requestId:string
+  sign:string
+  timestamp:number
+}
 /**
  * 验签
  * @param {object} params 已签名的内容
- * @param {string} sign 已签名的内容
  * @returns {boolean} 验签结果
  */
-export const v3VertifySign = (params:object, sign: string) => {
-  console.log('all params', {...params, clientId: 'dabby_test', sm4Key: HexToBase64(sm4EncryptKey)})
-  const formatterParams = sortParams({...params, clientId: 'dabby_test', sm4Key: HexToBase64(sm4EncryptKey)}).replaceAll('%3D', '=')
-  console.log('formatterParams', formatterParams)
-  const isVertified = sm2VerifySign(formatterParams, base64ToHex(sign))
+export const v3VertifySign = (params:v3Response) => {
+  const {sign, ...rest} = params
+  // console.log('params', params)
+  // console.log('formatterParams', formatterFn(params))
+  const isVertified = sm2VerifySign(formatterFn(rest), base64ToHex(sign))
 
   return isVertified
 }
+
+/**
+ * 解密
+ * @param {string} data 已签名的内容
+ * @returns {object} 解密后的结果
+ */
+export const v3Decrypt=(data:string) => sm4Decrypt(data, sm4Key)
