@@ -101,10 +101,10 @@
 </template>
 
 <script setup lang="ts">
-import { getAccessToken, getCertToken, simpauth, gawzauthreq } from '@/api/demo/index'
+import { getAccessToken, getCertToken, simpauth, gawzauthreq, nogawzauthreq } from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv } from '@/utils/index'
-import { v3Sign, v3VertifySign, v3Decrypt } from './v3crypt'
+import { v3Sign, v3VertifySign, v3Decrypt, handleV3Event } from './v3crypt'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
@@ -186,41 +186,52 @@ const handleSubmit = async () => {
 const handleV3 = async () => {
   // let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
   let foreBackUrl = 'https://sfrz.wsbs.shxga.gov.cn/sit/shanxiauthweb/transfer.html'
-  let params = {
-    authData: {
-      mode: 64,
-      idInfo: {
-        fullName: username.value,
-        idNum: idNum.value
+  let certToken = ''
+  if (!username.value || !idNum.value) { // 不存在用户录入的明文信息
+    let encryptParams = v3Sign({
+      mode: mode.value,
+      authType: 'GzhRegular',
+      businessInfo: {
+        subject: '身份验证'
+      },
+      extraParams: {
+        foreBackUrl
       }
-    }
-  }
-  let encryptParams = v3Sign(params, clientId.value) // 1.数据签名
-  let result = await simpauth(encryptParams) // 2.提交签名后的数据
-  let verifySign = v3VertifySign(result)// 得到响应数据后，先验签
-  console.log(verifySign)
-  let resData = v3Decrypt(result.data) // 3.解密数据，返回明文信息
-  const { gawzbz } = JSON.parse(resData) // 4.解构数据，获得公安网证标识
+    }, clientId.value) // 1.数据签名
+    let resData = await nogawzauthreq(encryptParams) // 2.提交签名后的数据
+    let result = handleV3Event(resData) // 统一处理后续操作
+    certToken = result.certToken
+  } else {
+    let encryptParams = v3Sign({
+      authData: {
+        mode: 64,
+        idInfo: {
+          fullName: username.value,
+          idNum: idNum.value
+        }
+      }
+    }, clientId.value) // 1.数据签名
+    let resData = await simpauth(encryptParams) // 2.提交签名后的数据
+    let result = handleV3Event(resData) // 统一处理后续操作
+    const gawzbz = result.gawzbz // 4.获得公安网证标识
 
-  let params2 = {
-    mode: mode.value,
-    authType: 'GzhRegular',
-    idInfo: {
-      gawzbz
-    },
-    businessInfo: {
-      subject: '身份验证'
-    },
-    extraParams: {
-      foreBackUrl
-    }
+    encryptParams = v3Sign({
+      mode: mode.value,
+      authType: 'GzhRegular',
+      idInfo: {
+        gawzbz
+      },
+      businessInfo: {
+        subject: '身份验证'
+      },
+      extraParams: {
+        foreBackUrl
+      }
+    }, clientId.value) // 5.数据签名
+    resData = await gawzauthreq(encryptParams) // 6.提交签名后的数据
+    result = handleV3Event(resData) // 统一处理后续操作
+    certToken = result.certToken // 4.获得certToken
   }
-  encryptParams = v3Sign(params2, clientId.value) // 5.数据签名
-  result = await gawzauthreq(encryptParams) // 6.提交签名后的数据
-  verifySign = v3VertifySign(result)// 得到响应数据后，先验签
-  console.log(verifySign)
-  resData = v3Decrypt(result.data) // 3.解密数据，返回明文信息
-  const { certToken } = JSON.parse(resData) // 4.解构数据，获得certToken
 
   let domain = `${
     import.meta.env.MODE === 'production'

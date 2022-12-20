@@ -50,3 +50,15 @@ export function gawzauthreq(data: object) {
     data
   })
 }
+
+/**
+ * 获取认证凭证（无网证标识）
+ */
+export function nogawzauthreq(data: object) {
+  return v3Service({
+    baseURL: VITE_V3_BASE_URL,
+    url: '/nogawzauthreq',
+    method: 'post',
+    data
+  })
+}

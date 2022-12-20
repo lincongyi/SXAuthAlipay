@@ -71,4 +71,17 @@ export const v3VertifySign = (params:v3Response) => {
  * @param {string} data 已签名的内容
  * @returns {object} 解密后的结果
  */
-export const v3Decrypt=(data:string) => sm4Decrypt(data, sm4Key)
+export const v3Decrypt = (data:string) => sm4Decrypt(data, sm4Key)
+
+/**
+ * 业务流程封装
+ * @param {v3Response} result 响应数据
+ * @returns {object} 解密后的结果
+ */
+export const handleV3Event = (result:v3Response) => {
+  const verifySign = v3VertifySign(result) // 得到响应数据后，先验签
+  console.log(verifySign)
+  const resData = v3Decrypt(result.data) // 解密数据，返回明文信息
+  console.log(resData)
+  return JSON.parse(resData)
+}
