@@ -104,7 +104,7 @@
 import { getAccessToken, getCertToken, simpauth, gawzauthreq, nogawzauthreq } from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv } from '@/utils/index'
-import { v3Sign, v3VertifySign, v3Decrypt, handleV3Event } from './v3crypt'
+import { v3Sign, handleV3Event } from './v3crypt'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
@@ -238,7 +238,7 @@ const handleV3 = async () => {
       ? import.meta.env.VITE_AUTH_BASE_URL
       : import.meta.env.VITE_PROXY_AUTH_BASE_URL
   }`
-  // return window.location.href = `${domain}/auth?certToken=${certToken}`
+  return window.location.href = `${domain}/auth?certToken=${certToken}`
 }
 
 // 格式化日期选择器显示

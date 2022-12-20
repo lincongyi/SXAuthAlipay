@@ -82,6 +82,5 @@ export const handleV3Event = (result:v3Response) => {
   const verifySign = v3VertifySign(result) // 得到响应数据后，先验签
   console.log(verifySign)
   const resData = v3Decrypt(result.data) // 解密数据，返回明文信息
-  console.log(resData)
   return JSON.parse(resData)
 }
