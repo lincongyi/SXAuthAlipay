@@ -26,10 +26,10 @@ let sm4EncryptKey:string // 加密后的sm4Key
  * @returns {object} 加密后返回的数据格式
  */
 export const v3Sign = (params:object, clientId:string) => {
-  sm4Key = uuidv4().replaceAll('-', '') // 原始sm4Key：32位16进制字符串
+  sm4Key = uuidv4().replace(/-/g, '') // 原始sm4Key：32位16进制字符串
   sm4EncryptKey = sm2Encrypt(sm4Key) // 加密后的sm4Key
   const data = sm4Encrypt(JSON.stringify(params), sm4Key) // 加密明文数据
-  const requestId = uuidv4().replaceAll('-', '') // 请求标识：32位16进制字符串
+  const requestId = uuidv4().replace(/-/g, '') // 请求标识：32位16进制字符串
   const timestamp = Date.now() // 当前时间戳
 
   const encryptData = {
