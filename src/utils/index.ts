@@ -31,7 +31,9 @@ export function getImageUrl<T>(name: T) {
 /**
  * 环境变量
  */
-export const loadEnv = (): ViteEnv => import.meta.env as ViteEnv
+export const loadEnv = (): ViteEnv => {
+  return import.meta.env as ViteEnv
+}
 
 /**
  * 格式化日期（yyyy-MM-dd）
