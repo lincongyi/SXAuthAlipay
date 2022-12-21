@@ -103,7 +103,7 @@
 <script setup lang="ts">
 import { getAccessToken, getCertToken, simpauth, gawzauthreq, nogawzauthreq } from '@/api/demo/index'
 import { Toast } from 'vant'
-import { loadEnv } from '@/utils/index'
+import { loadEnv, formatDate } from '@/utils/index'
 import { v3Sign, handleV3Event } from './v3crypt'
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
@@ -111,7 +111,7 @@ const clientId = ref(VITE_CLIENT_ID) // 账号
 const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
 const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
-const mode = ref<number|string>(64) // 认证模式
+const mode = ref<number|string>(16) // 认证模式
 const defaultIndex = ref(modeRange.findIndex((item) => item===mode.value)) // 默认认证模式index
 const username = ref('') // 姓名
 const idNum = ref('') // 证件号码
@@ -120,13 +120,11 @@ const showDatePicker = ref(false) // 日期选择器弹出层
 const dateType = ref(0) // 日期类型：0-起始日期；1-截止日期
 const startDateRange = [new Date(2000, 0, 1), new Date()]
 const endDateRange = [new Date(), new Date(2050, 11, 31)]
-const currentRange = ref([startDateRange, endDateRange][dateType.value])
 const startDate = ref(new Date(2000, 0, 1))
-const endDate = ref(new Date(2030, 11, 31))
+const endDate = ref(new Date(2030, 0, 1))
 
 const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
-
 
 // 选择模式
 const onConfirmMode = (data:number) => {
@@ -144,6 +142,7 @@ const onConfirmDate = (value:Date) => {
 // 格式化日期
 const startDateToString = computed(() => startDate.value.toLocaleDateString())
 const endDateToString = computed(() => endDate.value.toLocaleDateString())
+const currentRange = computed(() => [startDateRange, endDateRange][dateType.value])
 
 const handleSubmit = async () => {
   let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as {accessToken: string}
@@ -213,13 +212,15 @@ const handleV3 = async () => {
     }, clientId.value) // 1.数据签名
     let resData = await simpauth(encryptParams) // 2.提交签名后的数据
     let result = handleV3Event(resData) // 统一处理后续操作
-    const gawzbz = result.gawzbz // 4.获得公安网证标识
+    const gawzbz = result.gawzbz // 3.获得公安网证标识
 
     encryptParams = v3Sign({
       mode: mode.value,
       authType: 'GzhRegular',
       idInfo: {
-        gawzbz
+        gawzbz,
+        idStartDate: formatDate(startDate.value),
+        idEndDate: formatDate(endDate.value)
       },
       businessInfo: {
         subject: '身份验证'
@@ -228,9 +229,9 @@ const handleV3 = async () => {
         foreBackUrl
       }
     }, clientId.value) // 5.数据签名
-    resData = await gawzauthreq(encryptParams) // 6.提交签名后的数据
+    resData = await gawzauthreq(encryptParams) // 4.提交签名后的数据
     result = handleV3Event(resData) // 统一处理后续操作
-    certToken = result.certToken // 4.获得certToken
+    certToken = result.certToken // 5.获得certToken
   }
 
   let domain = `${
@@ -238,7 +239,7 @@ const handleV3 = async () => {
       ? import.meta.env.VITE_AUTH_BASE_URL
       : import.meta.env.VITE_PROXY_AUTH_BASE_URL
   }`
-  return window.location.href = `${domain}/auth?certToken=${certToken}`
+  // return window.location.href = `${domain}/auth?certToken=${certToken}`
 }
 
 // 格式化日期选择器显示

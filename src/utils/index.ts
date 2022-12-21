@@ -31,6 +31,16 @@ export function getImageUrl<T>(name: T) {
 /**
  * 环境变量
  */
-export const loadEnv = (): ViteEnv => {
-  return import.meta.env
+export const loadEnv = (): ViteEnv => import.meta.env as ViteEnv
+
+/**
+ * 格式化日期（yyyy-MM-dd）
+ */
+export const formatDate = (date:Date): string => {
+  const year = date.getFullYear()
+  let month = `${date.getMonth() + 1}`
+  let day = `${date.getDate()}`
+  if (Number(month)<10) month = `0${month}`
+  if (Number(day)<10) day = `0${day}`
+  return `${year}${month}${day}`
 }

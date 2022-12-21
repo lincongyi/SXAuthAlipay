@@ -6,7 +6,7 @@ import { sm4Encrypt, sm4Decrypt, sm2Encrypt, HexToBase64, sm2Sign, sm2VerifySign
  * @param {object} obj 待处理的数据
  * @returns {string} 格式化后的数据
  */
-const formatterFn = (obj:Record<string, any>) => {
+const formatterParams = (obj:Record<string, any>) => {
   const map = new Map()
   const keyList = Object.keys(obj)
   keyList.sort()
@@ -39,7 +39,7 @@ export const v3Sign = (params:object, clientId:string) => {
     sm4Key: HexToBase64(sm4EncryptKey),
     timestamp,
   }
-  const formatterEncryptData = formatterFn(encryptData)
+  const formatterEncryptData = formatterParams(encryptData)
   const sign = HexToBase64(sm2Sign(formatterEncryptData))
   return { ...encryptData, sign }
 }
@@ -60,8 +60,8 @@ type v3Response = {
 export const v3VertifySign = (params:v3Response) => {
   const {sign, ...rest} = params
   // console.log('params', params)
-  // console.log('formatterParams', formatterFn(params))
-  const isVertified = sm2VerifySign(formatterFn(rest), base64ToHex(sign))
+  // console.log('formatterParams', formatterParams(params))
+  const isVertified = sm2VerifySign(formatterParams(rest), base64ToHex(sign))
 
   return isVertified
 }
