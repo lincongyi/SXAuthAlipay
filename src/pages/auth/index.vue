@@ -168,14 +168,14 @@ const isFilled = computed(() => fullName.value && idNum.value) // 用户名和�
 
 
 let url = window.location.href
-// if (!url.includes('&')){
-//   Dialog.alert({
-//     message: '路径参数有错，请重新获取'
-//   })
-//   setTimeout(() => {
-//     window.history.go(-1)
-//   }, 1500)
-// }
+if (!url.includes('&')){
+  Dialog.alert({
+    message: '路径参数有错，请重新获取'
+  })
+  setTimeout(() => {
+    window.history.go(-1)
+  }, 1500)
+}
 const query = url.substring(url.indexOf('?') + 1)
 const urlParams = new URLSearchParams(query)
 const loginToken = urlParams.get('loginToken') || ''
@@ -192,6 +192,8 @@ const certifyId = ref('')
 
 onMounted(async() => {
   // 校验certToken 或 userId 是否有绑定用户的信息
+  let certToken = '9e2f8b0f5efc438e8e5fa6f1d804856b-002'
+  let loginToken = '6d0727ac-1598-433d-84ab-0595466caff3'
   let { data: identityInfo } = await checkIdentityInfo({ loginToken, certToken })
 
   mode.value = identityInfo.mode
@@ -215,7 +217,7 @@ onMounted(async() => {
     isFilledFullName.value = isFilledIdNum.value = true
     if (fullName.value && idNum.value){
       let {idStartDate, idEndDate} = identityInfo
-      if ((expirationDateMode.includes(mode.value) && !idStartDate || !idEndDate)) return
+      if (expirationDateMode.includes(mode.value) && (!idStartDate || !idEndDate)) return
       else isActionSheetShow.value = true
     }
   }
