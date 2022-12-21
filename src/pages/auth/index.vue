@@ -192,8 +192,6 @@ const certifyId = ref('')
 
 onMounted(async() => {
   // 校验certToken 或 userId 是否有绑定用户的信息
-  let certToken = '9e2f8b0f5efc438e8e5fa6f1d804856b-002'
-  let loginToken = '6d0727ac-1598-433d-84ab-0595466caff3'
   let { data: identityInfo } = await checkIdentityInfo({ loginToken, certToken })
 
   mode.value = identityInfo.mode
