@@ -239,7 +239,7 @@ const handleV3 = async () => {
       ? import.meta.env.VITE_AUTH_BASE_URL
       : import.meta.env.VITE_PROXY_AUTH_BASE_URL
   }`
-  // return window.location.href = `${domain}/auth?certToken=${certToken}`
+  return window.location.href = `${domain}/auth?certToken=${certToken}`
 }
 
 // 格式化日期选择器显示
