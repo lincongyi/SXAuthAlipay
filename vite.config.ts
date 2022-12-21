@@ -25,7 +25,6 @@ export default ({ mode }) =>
         entry: [
           path.resolve('src/main.ts'),
           // path.resolve('src/pages/demo/main.ts'),
-          path.resolve('src/pages/auth/main.ts'),
           path.resolve('src/pages/authResult/main.ts'),
         ], // entry for each page, different from the above
         localEnabled: mode === 'development',

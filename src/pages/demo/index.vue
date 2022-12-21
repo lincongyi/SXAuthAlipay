@@ -113,8 +113,8 @@ const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
 const mode = ref<number|string>(16) // 认证模式
 const defaultIndex = ref(modeRange.findIndex((item) => item===mode.value)) // 默认认证模式index
-const username = ref('') // 姓名
-const idNum = ref('') // 证件号码
+const username = ref('林聪毅') // 姓名
+const idNum = ref('440105199203182415') // 证件号码
 const showDatePicker = ref(false) // 日期选择器弹出层
 
 const dateType = ref(0) // 日期类型：0-起始日期；1-截止日期
@@ -219,8 +219,8 @@ const handleV3 = async () => {
       authType: 'GzhRegular',
       idInfo: {
         gawzbz,
-        idStartDate: formatDate(startDate.value),
-        idEndDate: formatDate(endDate.value)
+        idStartDate: (username.value&&idNum.value) ? formatDate(startDate.value) : '', // 没有录入用户信息，不传证件有效期
+        idEndDate: (username.value&&idNum.value) ? formatDate(endDate.value): ''
       },
       businessInfo: {
         subject: '身份验证'

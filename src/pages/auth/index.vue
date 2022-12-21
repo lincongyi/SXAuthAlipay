@@ -49,7 +49,58 @@
             :rules="[{ required: true, message: '请填写证件号码' }]"
           />
         </template>
+        <template v-if="expirationDateMode.includes(mode)">
+          <template v-if="isFilledExpirationDate">
+            <van-field
+              v-model="startDate"
+              name="起始日期"
+              label="起始日期"
+              placeholder="起始日期"
+              readonly
+              maxlength="18"
+            />
+            <van-field
+              v-model="endDate"
+              name="起始日期"
+              label="起始日期"
+              placeholder="起始日期"
+              readonly
+              maxlength="18"
+            />
+          </template>
+          <template v-else>
+            <van-field
+              v-model="datePickerStartDateToString"
+              readonly
+              is-link
+              name="起始日期"
+              label="起始日期"
+              @click="dateType = 0; showDatePicker = true"
+            />
+            <van-field
+              v-model="datePickerEndDateToString"
+              readonly
+              is-link
+              name="截止日期"
+              label="截止日期"
+              @click="dateType = 1; showDatePicker = true"
+            />
+          </template>
+        </template>
       </van-cell-group>
+
+      <van-popup v-model:show="showDatePicker" round position="bottom">
+        <van-datetime-picker
+          v-model="[datePickerStartDate,datePickerEndDate][dateType]"
+          title="选择日期"
+          type="date"
+          :min-date="currentRange[0]"
+          :max-date="currentRange[1]"
+          :formatter="formatterDate"
+          @confirm="onConfirmDate"
+        />
+      </van-popup>
+
       <div style="margin: 16px;">
         <van-button square block type="primary" :disabled="!isFilled" native-type="submit">提交</van-button>
       </div>
@@ -86,19 +137,35 @@
 import { checkIdentityInfo, getBeforeAuthTips, alipayAuthInit, alipayAuthQuery} from '@/api/auth/index'
 import { Toast, Dialog } from 'vant'
 import { hideCode, getImageUrl } from '@/utils/index'
-import { loadEnv } from '@/utils/index'
+import { loadEnv, formatDate } from '@/utils/index'
 
 const backPageUrl = ref('') // 用户关闭认证授权面板，返回的url地址
 const fullName = ref('') // 用户名
 const fullNameFormat = ref('')
 const isFilledFullName = ref(false) // 是否在第三方页面已经录入姓名
 const idNum = ref('') // 证件号码
-const isFilledIdNum = ref(false) // 是否在第三方页面已经录入证件号码
 const idNumFormat = ref('')
+const isFilledIdNum = ref(false) // 是否在第三方页面已经录入证件号码
+const isFilledExpirationDate = ref(false) // 是否在第三方页面已经录入证件有效期
+
+const startDateRange = [new Date(2000, 0, 1), new Date()]
+const endDateRange = [new Date(), new Date(2050, 11, 31)]
+const expirationDateMode = [16, 18] // 16，18模式需要提供证件有效期
+const dateType = ref(0) // 日期类型：0-起始日期；1-截止日期
+const showDatePicker = ref(false) // 日期选择器弹出层
+const startDate = ref('') // 单纯用于展示的证件有效期起始日期
+const endDate = ref('') // 单纯用于展示的证件有效期截止日期
+const datePickerStartDate = ref(new Date(2000, 0, 1)) // 日期选择器选中的起始日期
+const datePickerEndDate = ref(new Date(2030, 0, 1)) // 日期选择器选中的截止日期
+// 格式化日期
+const datePickerStartDateToString = computed(() => datePickerStartDate.value.toLocaleDateString())
+const datePickerEndDateToString = computed(() => datePickerEndDate.value.toLocaleDateString())
 
 const isActionSheetShow = ref(false) // 控制认证授权底部弹出框显示隐藏
 const isChecked = ref(false) // 是否同意身份核验
+const currentRange = computed(() => [startDateRange, endDateRange][dateType.value])
 const isFilled = computed(() => fullName.value && idNum.value) // 用户名和证件号都填好才能提交
+
 
 let url = window.location.href
 if (!url.includes('&')){
@@ -126,16 +193,31 @@ const certifyId = ref('')
 onMounted(async() => {
   // 校验certToken 或 userId 是否有绑定用户的信息
   let { data: identityInfo } = await checkIdentityInfo({ loginToken, certToken })
+  if (!identityInfo) return
   mode.value = identityInfo.mode
   // 用户状态（0：已登录 1：certToken中包含身份信息 2：certToken中不包含身份信息）
   backPageUrl.value = identityInfo.foreBackUrl
   if (identityInfo.userStatus!==2){
     fullName.value = identityInfo.fullName
-    fullNameFormat.value = hideCode(fullName.value, 0, fullName.value.length - 1) // 姓名脱敏
+    fullNameFormat.value = hideCode(fullName.value, 0, fullName.value.length - 1) // 姓名脱敏处理
     idNum.value = identityInfo.idNum
     idNumFormat.value = hideCode(idNum.value, 3, 2) // 证件号码脱敏处理
+
+    if (expirationDateMode.includes(mode.value)){ // 如果是16，18模式，需要反显或录入证件有效期
+      let {idStartDate, idEndDate} = identityInfo
+      if (idStartDate && idEndDate) {
+        startDate.value = identityInfo.idStartDate
+        endDate.value = identityInfo.idEndDate
+        isFilledExpirationDate.value = true
+      }
+    }
+
     isFilledFullName.value = isFilledIdNum.value = true
-    if (fullName.value && idNum.value) isActionSheetShow.value = true
+    if (fullName.value && idNum.value){
+      let {idStartDate, idEndDate} = identityInfo
+      if ((expirationDateMode.includes(mode.value) && !idStartDate || !idEndDate)) return
+      else isActionSheetShow.value = true
+    }
   }
 
   // 根据certToken获取认证前提示
@@ -145,6 +227,13 @@ onMounted(async() => {
   protocols.value = JSON.parse(authTips.protocols)[0]
 
 })
+
+// 选择日期
+const onConfirmDate = (value:Date) => {
+  if (!dateType.value) datePickerStartDate.value = value
+  else datePickerEndDate.value = value
+  showDatePicker.value = false
+}
 
 const { VITE_SERVICE_AGREEMENT } = loadEnv()
 const toProtocols = () => {
@@ -164,20 +253,46 @@ const handleSubmit = () => {
   isActionSheetShow.value = true
 }
 
+type authorizeParams = {
+  loginToken: string
+  certToken: string
+  fullName: string
+  idNum: string
+  mode?: number
+  idStartDate?: string
+  idEndDate?: string
+}
+
 const toAuthorize = async() => {
   if (!isChecked.value) return Toast('请同意《服务协议》')
   if ([16, 64].includes(mode.value)) { // 16，64模式无需走活检流程
-    let params = {
+    let params:authorizeParams = {
       loginToken,
       certToken,
       fullName: fullName.value,
       idNum: idNum.value,
       mode: mode.value,
     }
+    if (expirationDateMode.includes(mode.value)){
+      params.idStartDate = isFilledExpirationDate.value ? startDate.value : formatDate(datePickerStartDate.value)
+      params.idEndDate = isFilledExpirationDate.value ? endDate.value : formatDate(datePickerEndDate.value)
+    }
+
     followUpEvent(params)
   } else {
     // 获取调起支付宝刷脸url
-    let {data} = await alipayAuthInit({loginToken, certToken, fullName: fullName.value, idNum: idNum.value})
+    let params:authorizeParams = {
+      loginToken,
+      certToken,
+      fullName: fullName.value,
+      idNum: idNum.value
+    }
+    if (expirationDateMode.includes(mode.value)){
+      params.idStartDate = isFilledExpirationDate.value ? startDate.value : formatDate(datePickerStartDate.value)
+      params.idEndDate = isFilledExpirationDate.value ? endDate.value : formatDate(datePickerEndDate.value)
+    }
+
+    let {data} = await alipayAuthInit(params)
     certifyId.value = data.certifyId || ''
     certifyUrl.value = data.certifyUrl || ''
     isActionSheetShow.value = false
@@ -249,6 +364,20 @@ const followUpEvent = async (params: object) => {
   setTimeout(() => {
     window.location.replace(data.foreBackUrl)
   }, 1000)
+}
+
+// 格式化日期选择器显示
+const formatterDate = (type:string, value:string) => {
+  if (type === 'year') {
+    return `${value}年`
+  }
+  if (type === 'month') {
+    return `${value}月`
+  }
+  if (type === 'day') {
+    return `${value}日`
+  }
+  return value
 }
 </script>
 
