@@ -168,14 +168,14 @@ const isFilled = computed(() => fullName.value && idNum.value) // 用户名和�
 
 
 let url = window.location.href
-if (!url.includes('&')){
-  Dialog.alert({
-    message: '路径参数有错，请重新获取'
-  })
-  setTimeout(() => {
-    window.history.go(-1)
-  }, 1500)
-}
+// if (!url.includes('&')){
+//   Dialog.alert({
+//     message: '路径参数有错，请重新获取'
+//   })
+//   setTimeout(() => {
+//     window.history.go(-1)
+//   }, 1500)
+// }
 const query = url.substring(url.indexOf('?') + 1)
 const urlParams = new URLSearchParams(query)
 const loginToken = urlParams.get('loginToken') || ''
@@ -193,7 +193,7 @@ const certifyId = ref('')
 onMounted(async() => {
   // 校验certToken 或 userId 是否有绑定用户的信息
   let { data: identityInfo } = await checkIdentityInfo({ loginToken, certToken })
-  if (!identityInfo) return
+
   mode.value = identityInfo.mode
   // 用户状态（0：已登录 1：certToken中包含身份信息 2：certToken中不包含身份信息）
   backPageUrl.value = identityInfo.foreBackUrl

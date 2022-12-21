@@ -111,7 +111,7 @@ const clientId = ref(VITE_CLIENT_ID) // 账号
 const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
 const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
-const mode = ref<number|string>(16) // 认证模式
+const mode = ref<number|string>(64) // 认证模式
 const defaultIndex = ref(modeRange.findIndex((item) => item===mode.value)) // 默认认证模式index
 const username = ref('林聪毅') // 姓名
 const idNum = ref('440105199203182415') // 证件号码
