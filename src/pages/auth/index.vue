@@ -441,7 +441,7 @@ h1{
     margin-right: 20px;
   }
 }
-.van-popup{
+.van-toast{
   background-color: #000;
 }
 </style>
