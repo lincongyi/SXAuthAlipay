@@ -215,7 +215,7 @@ onMounted(async() => {
     isFilledFullName.value = isFilledIdNum.value = true
     if (fullName.value && idNum.value){
       let {idStartDate, idEndDate} = identityInfo
-      if (expirationDateMode.includes(mode.value) && (!idStartDate || !idEndDate)) return
+      if (expirationDateMode.includes(mode.value) && (!idStartDate || !idEndDate)) isActionSheetShow.value = false
       else isActionSheetShow.value = true
     }
   }
