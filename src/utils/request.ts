@@ -14,7 +14,7 @@ const service:AxiosInstance = axios.create({
 
 // 响应拦截器
 service.interceptors.response.use(
-  (res: AxiosResponse) => {
+  (res: AxiosResponse<TResponse>) => {
     const {retCode} = res.data
     if (retCode !== 200) {
       if (!retCode) return res.data
@@ -47,7 +47,7 @@ const v3Service:AxiosInstance = axios.create({
 
 // 响应拦截器
 v3Service.interceptors.response.use(
-  (res: AxiosResponse) => {
+  (res: AxiosResponse<TV3Response>) => {
     const {code} = res.data
     if (code !== 200) {
       if (!code) return res.data

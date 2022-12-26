@@ -24,3 +24,17 @@ declare interface ViteEnv {
   VITE_CLIENT_SECRET: 'dabby_dev_al';
   VITE_SERVICE_AGREEMENT: string;
 }
+
+declare type TResponse = {
+  retCode: number
+  retMessage: string
+}
+
+declare type TV3Response = {
+  code: number
+  data: string
+  msg: string
+  requestId: string
+  sign: string
+  timestamp: number
+}

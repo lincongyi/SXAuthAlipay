@@ -36,7 +36,7 @@ export function simpauth(data: object) {
     url: '/simpauth',
     method: 'post',
     data
-  })
+  }) as unknown as TV3Response
 }
 
 /**
@@ -48,7 +48,7 @@ export function gawzauthreq(data: object) {
     url: '/gawzauthreq',
     method: 'post',
     data
-  })
+  }) as unknown as TV3Response
 }
 
 /**
@@ -60,5 +60,5 @@ export function nogawzauthreq(data: object) {
     url: '/nogawzauthreq',
     method: 'post',
     data
-  })
+  }) as unknown as TV3Response
 }
