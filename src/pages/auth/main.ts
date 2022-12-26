@@ -5,6 +5,9 @@ import 'normalize.css/normalize.css'
 
 import { Button, Form, Field, CellGroup, NumberKeyboard, ActionSheet, Divider, Checkbox, Image as VanImage, Popup, DatetimePicker } from 'vant'
 
+// import VConsole from 'vconsole'
+// new VConsole()
+
 createApp(App)
   .use(Button)
   .use(Form)
