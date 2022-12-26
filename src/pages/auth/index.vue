@@ -168,14 +168,14 @@ const isFilled = computed(() => fullName.value && idNum.value) // 用户名和�
 
 
 let url = window.location.href
-// if (!url.includes('&')){
-//   Dialog.alert({
-//     message: '路径参数有错，请重新获取'
-//   })
-//   setTimeout(() => {
-//     window.history.go(-1)
-//   }, 1500)
-// }
+if (!url.includes('&')){
+  Dialog.alert({
+    message: '路径参数有错，请重新获取'
+  })
+  setTimeout(() => {
+    window.history.go(-1)
+  }, 1500)
+}
 const query = url.substring(url.indexOf('?') + 1)
 const urlParams = new URLSearchParams(query)
 const loginToken = urlParams.get('loginToken') || ''
@@ -193,16 +193,6 @@ const certifyId = ref('')
 onMounted(async() => {
   // 校验certToken 或 userId 是否有绑定用户的信息
   let { data: identityInfo } = await checkIdentityInfo({ loginToken, certToken })
-  identityInfo = {
-    foreBackUrl: 'http://10.30.1.120:3000/demo.html?certToken=8b9f20c5-fbe4-48a6-a309-e68e006760e5&retCode=5204&errorMsg=用户取消认证',
-    fullName: '*剑威',
-    idEndDate: null,
-    idNum: '440*************50',
-    idStartDate: null,
-    mobile_num: '137****5386',
-    mode: 16,
-    userStatus: 0
-  }
 
   mode.value = identityInfo.mode
   // 用户状态（0：已登录 1：certToken中包含身份信息 2：certToken中不包含身份信息）
