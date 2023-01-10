@@ -1,23 +1,31 @@
 import { v4 as uuidv4 } from 'uuid'
-import { sm4Encrypt, sm4Decrypt, sm2Encrypt, HexToBase64, sm2Sign, sm2VerifySign, base64ToHex } from './utils'
+import {
+  sm4Encrypt,
+  sm4Decrypt,
+  sm2Encrypt,
+  HexToBase64,
+  sm2Sign,
+  sm2VerifySign,
+  base64ToHex,
+} from './utils'
 
 /**
  * 格式化数据
  * @param {object} obj 待处理的数据
  * @returns {string} 格式化后的数据
  */
-const formatterParams = (obj:Record<string, any>) => {
+const formatterParams = (obj: Record<string, any>) => {
   const map = new Map()
   const keyList = Object.keys(obj)
   keyList.sort()
   keyList.forEach((item) => map.set(item, obj[item]))
   let result = ''
-  map.forEach((value, key) => result+=`${key}=${value}&`)
+  map.forEach((value, key) => (result += `${key}=${value}&`))
   return result.slice(0, -1)
 }
 
-let sm4Key:string // 原始sm4Key：32位16进制字符串
-let sm4EncryptKey:string // 加密后的sm4Key
+let sm4Key: string // 原始sm4Key：32位16进制字符串
+let sm4EncryptKey: string // 加密后的sm4Key
 
 /**
  * 返回格式化数据+签名内容
@@ -25,7 +33,7 @@ let sm4EncryptKey:string // 加密后的sm4Key
  * @param {string} clientId 账号
  * @returns {object} 加密后返回的数据格式
  */
-export const v3Sign = (params:object, clientId:string) => {
+export const v3Sign = (params: object, clientId: string) => {
   sm4Key = uuidv4().replace(/-/g, '') // 原始sm4Key：32位16进制字符串
   sm4EncryptKey = sm2Encrypt(sm4Key) // 加密后的sm4Key
   const data = sm4Encrypt(JSON.stringify(params), sm4Key) // 加密明文数据
@@ -45,24 +53,21 @@ export const v3Sign = (params:object, clientId:string) => {
 }
 
 type v3Response = {
-  code:number
-  data:string
-  msg:string
-  requestId:string
-  sign:string
-  timestamp:number
+  code: number
+  data: string
+  msg: string
+  requestId: string
+  sign: string
+  timestamp: number
 }
 /**
  * 验签
  * @param {object} params 已签名的内容
  * @returns {boolean} 验签结果
  */
-export const v3VertifySign = (params:v3Response) => {
-  const {sign, ...rest} = params
-  // console.log('params', params)
-  // console.log('formatterParams', formatterParams(params))
+export const v3VertifySign = (params: v3Response) => {
+  const { sign, ...rest } = params
   const isVertified = sm2VerifySign(formatterParams(rest), base64ToHex(sign))
-
   return isVertified
 }
 
@@ -71,16 +76,19 @@ export const v3VertifySign = (params:v3Response) => {
  * @param {string} data 已签名的内容
  * @returns {object} 解密后的结果
  */
-export const v3Decrypt = (data:string) => sm4Decrypt(data, sm4Key)
+export const v3Decrypt = (data: string) => sm4Decrypt(data, sm4Key)
 
 /**
  * 业务流程封装
  * @param {v3Response} result 响应数据
  * @returns {object} 解密后的结果
  */
-export const handleV3Event = (result:v3Response) => {
+export const handleV3Event = (result: v3Response) => {
   const verifySign = v3VertifySign(result) // 得到响应数据后，先验签
-  console.log(verifySign)
+  // if (verifySign) {
   const resData = v3Decrypt(result.data) // 解密数据，返回明文信息
   return JSON.parse(resData)
+  // } else {
+  //   return {}
+  // }
 }

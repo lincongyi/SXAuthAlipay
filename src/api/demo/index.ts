@@ -6,7 +6,7 @@ const { VITE_DEMO_BASE_URL, VITE_V3_BASE_URL } = loadEnv()
 /**
  * 获取accessToken
  */
-export function getAccessToken(params?:object) {
+export function getAccessToken(params?: object) {
   return request({
     baseURL: VITE_DEMO_BASE_URL,
     url: '/getaccesstoken',
@@ -35,7 +35,7 @@ export function simpauth(data: object) {
     baseURL: VITE_V3_BASE_URL,
     url: '/simpauth',
     method: 'post',
-    data
+    data,
   }) as unknown as TV3Response
 }
 
@@ -47,7 +47,7 @@ export function gawzauthreq(data: object) {
     baseURL: VITE_V3_BASE_URL,
     url: '/gawzauthreq',
     method: 'post',
-    data
+    data,
   }) as unknown as TV3Response
 }
 
@@ -59,6 +59,6 @@ export function nogawzauthreq(data: object) {
     baseURL: VITE_V3_BASE_URL,
     url: '/nogawzauthreq',
     method: 'post',
-    data
+    data,
   }) as unknown as TV3Response
 }
