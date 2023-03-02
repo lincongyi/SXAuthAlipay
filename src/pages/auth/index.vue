@@ -76,8 +76,10 @@
               name="起始日期"
               label="起始日期"
               @click="
-                dateType = 0
-                showDatePicker = true
+                () => {
+                  dateType = 0
+                  showDatePicker = true
+                }
               "
             />
             <van-field
@@ -87,8 +89,10 @@
               name="截止日期"
               label="截止日期"
               @click="
-                dateType = 1
-                showDatePicker = true
+                () => {
+                  dateType = 1
+                  showDatePicker = true
+                }
               "
             />
           </template>
