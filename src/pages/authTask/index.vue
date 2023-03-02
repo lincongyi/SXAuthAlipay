@@ -8,7 +8,7 @@
         fit="contain"
         :src="authTaskLogo"
       />
-      陕西实人认证
+      陕西公民实人认证演示demo
     </div>
     <div class="content">
       <van-image
@@ -21,7 +21,11 @@
         <van-icon name="replay" />
         刷新or生成二维码
       </div>
-      <van-radio-group v-model="authMode.mode" direction="horizontal" @change="refreshQrcode">
+      <van-radio-group
+        v-model="authMode.mode"
+        direction="horizontal"
+        @change="refreshQrcode"
+      >
         <van-radio name="64">实名</van-radio>
         <van-radio name="66">实名+实人</van-radio>
       </van-radio-group>
@@ -47,11 +51,11 @@
             </div>
             <div class="cell">
               <div class="cell-title">姓名：</div>
-              <div class="cell-value">{{userData.name}}</div>
+              <div class="cell-value">{{ userData.name }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">身份号码：</div>
-              <div class="cell-value">{{userData.idNum}}</div>
+              <div class="cell-value">{{ userData.idNum }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">警号/工号：</div>
@@ -63,7 +67,7 @@
             </div>
             <div class="cell">
               <div class="cell-title">手机号：</div>
-              <div class="cell-value">{{userData.phoneNum}}</div>
+              <div class="cell-value">{{ userData.phoneNum }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">网证标识：</div>
@@ -81,15 +85,15 @@
             </div>
             <div class="cell">
               <div class="cell-title">认证模式：</div>
-              <div class="cell-value">{{userData.mode}}</div>
+              <div class="cell-value">{{ userData.mode }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">认证类型：</div>
-              <div class="cell-value">{{userData.authType}}</div>
+              <div class="cell-value">{{ userData.authType }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">认证等级：</div>
-              <div class="cell-value">{{authLevel}}</div>
+              <div class="cell-value">{{ authLevel }}</div>
             </div>
           </div>
           <van-divider />
@@ -98,11 +102,11 @@
             <div class="card-title">终端信息</div>
             <div class="cell">
               <div class="cell-title">终端系统/版本：</div>
-              <div class="cell-value">{{`${browser}/${version}`}}</div>
+              <div class="cell-value">{{ `${browser}/${version}` }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">终端单位：</div>
-              <div class="cell-value">{{terminalUnit}}</div>
+              <div class="cell-value">{{ terminalUnit }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">终端Mac地址：</div>
@@ -144,7 +148,7 @@
             <div class="card-title">时空信息</div>
             <div class="cell">
               <div class="cell-title">认证时间：</div>
-              <div class="cell-value">{{userData.time}}</div>
+              <div class="cell-value">{{ userData.time }}</div>
             </div>
             <div class="cell">
               <div class="cell-title">地理位置：</div>
@@ -155,7 +159,18 @@
       </div>
       <van-divider />
       <div class="btn-wrap">
-        <van-button type="primary" block plain @click="isOverlayShow = false">关闭</van-button>
+        <van-button
+          type="primary"
+          block
+          plain
+          @click="
+            () => {
+              isOverlayShow = false
+              handleGetCertToken()
+            }
+          "
+          >关闭</van-button
+        >
       </div>
     </div>
   </van-overlay>
@@ -180,24 +195,25 @@ const userImage = ref('') // 用户认证图片
 const terminalUnit = '大白互联网科技有限公司'
 
 type TUserData = {
-  name?:string;
-  idNum?:string;
-  mode?:string;
-  time?: string;
-  authType?: string;
-  phoneNum?: string;
+  name?: string
+  idNum?: string
+  mode?: string
+  time?: string
+  authType?: string
+  phoneNum?: string
 }
 let userData = reactive<TUserData>({}) // 接收后端返回的用户信息
 
 let authMode = reactive({
   certAnnexType: 0,
-  mode: '66'
+  mode: '66',
 })
 
-const authLevelList = [ // 认证模式对应的认证等级
-  {mode: 64, level: 'D'},
-  {mode: 66, level: 'C'}
-] as const
+const authLevelList = [
+  // 认证模式对应的认证等级
+  { mode: 64, level: 'D' },
+  { mode: 66, level: 'C' },
+]
 
 const authLevel = computed(() => {
   let mode = Number(authMode.mode)
@@ -205,18 +221,18 @@ const authLevel = computed(() => {
   return result?.level
 })
 
-let {browser, version} = getExploreInfo()
+let { browser, version } = getExploreInfo()
 
 // 获取二维码
-const handleGetCertToken = async (cb?: ()=>void) => {
+const handleGetCertToken = async (cb?: () => void) => {
   let result = await getCertToken({
     ...authMode,
     businessExtraInfo: JSON.stringify({
       terminalUnit,
-      system: `${browser}/${version}`
-    })
+      system: `${browser}/${version}`,
+    }),
   })
-  let {img, cert_token} = result.data
+  let { img, cert_token } = result.data
   certToken.value = cert_token
   qrcodeImage.value = `data:image/png;base64,${img}`
   getUserData(cert_token)
@@ -224,25 +240,27 @@ const handleGetCertToken = async (cb?: ()=>void) => {
 }
 
 // webSocket监听用户是否有认证结果返回
-let timer:any // 定时器
-let ws:WebSocket // webSocket
+let timer: ReturnType<typeof setInterval> | null // 定时器
+let ws: WebSocket // webSocket
 const webSocketUrl = 'wss://sfrz.wsbs.shxga.gov.cn/socket/conn'
 const EXPIRETIME = 30 // 后端40s内没接收到任何数据，自动断开链接
 
-const getUserData = (cert_token:string) => {
+const getUserData = (cert_token: string) => {
   ws = new WebSocket(webSocketUrl)
   ws.onopen = () => {
-    ws.send(JSON.stringify({
-      flag: 'getCertCode',
-      cert_token
-    }))
+    ws.send(
+      JSON.stringify({
+        flag: 'getCertCode',
+        cert_token,
+      })
+    )
     // 保持webSocket的连接
     timer = setInterval(() => {
       ws.send('{}')
-    }, EXPIRETIME*1000)
+    }, EXPIRETIME * 1000)
   }
 
-  ws.onmessage = async ({data}) => {
+  ws.onmessage = async ({ data }) => {
     let dataParse = JSON.parse(data)
 
     userData.name = dataParse.full_name // 姓名
@@ -250,20 +268,19 @@ const getUserData = (cert_token:string) => {
     userData.mode = dataParse.mode // 认证模式
     userData.time = dataParse.createdTime // 认证时间
 
-
-    let certToken:string = dataParse.cert_token
+    let certToken: string = dataParse.cert_token
 
     interface IGetCertTokenImg {
       authInfo: {
-        authType: string;
-      };
-      img:string;
+        authType: string
+      }
+      img: string
       userInfo: {
         phoneNum: string
       }
     }
-    let result = await getCertTokenImg({certToken})
-    let {authInfo, img, userInfo} = result as unknown as IGetCertTokenImg
+    let result = await getCertTokenImg({ certToken })
+    let { authInfo, img, userInfo } = result as unknown as IGetCertTokenImg
 
     userData.authType = authInfo?.authType // 认证方式
     userData.phoneNum = userInfo?.phoneNum // 手机号码
@@ -273,8 +290,10 @@ const getUserData = (cert_token:string) => {
   }
 
   ws.onclose = () => {
-    clearInterval(timer)
-    timer = null
+    if (timer) {
+      clearInterval(timer)
+      timer = null
+    }
   }
 }
 
@@ -284,7 +303,7 @@ const refreshQrcode = () => {
   handleGetCertToken(() => {
     setTimeout(() => {
       isForbidden.value = false
-    }, REFRESHTIME*1000)
+    }, REFRESHTIME * 1000)
   })
 }
 
@@ -315,6 +334,10 @@ onUnmounted(() => {
   -moz-osx-font-smoothing: grayscale;
   padding-top: 20px;
   box-sizing: border-box;
-  background: linear-gradient(160deg, rgba(0,255,213,.5) 20%,rgba(0,140,255,.5) 80%);
+  background: linear-gradient(
+    160deg,
+    rgba(0, 255, 213, 0.5) 20%,
+    rgba(0, 140, 255, 0.5) 80%
+  );
 }
 </style>
