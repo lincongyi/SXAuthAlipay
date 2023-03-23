@@ -42,7 +42,7 @@
           maxlength="18"
           placeholder="证件号码"
         />
-        <template v-if="[16,18].includes(Number(mode))">
+        <template v-if="[16, 18].includes(Number(mode))">
           <van-divider content-position="left">证件有效期</van-divider>
           <van-field
             v-model="startDateToString"
@@ -50,7 +50,12 @@
             is-link
             name="起始日期"
             label="起始日期"
-            @click="dateType = 0; showDatePicker = true"
+            @click="
+              () => {
+                dateType = 0
+                showDatePicker = true
+              }
+            "
           />
           <van-field
             v-model="endDateToString"
@@ -58,7 +63,12 @@
             is-link
             name="截止日期"
             label="截止日期"
-            @click="dateType = 1; showDatePicker = true"
+            @click="
+              () => {
+                dateType = 1
+                showDatePicker = true
+              }
+            "
           />
         </template>
       </van-cell-group>
@@ -69,11 +79,14 @@
         <div class="radio-title">跳转空白页面后重定向</div>
         <van-radio name="1">生活号</van-radio>
         <van-radio name="2">MINI PROGRAM</van-radio>
-
       </van-radio-group>
-      <div style="margin: 16px;">
-        <van-button round block type="primary" native-type="submit">提交</van-button><br/>
-        <van-button round block type="primary" @click="handleV3">v3 token</van-button>
+      <div style="margin: 16px">
+        <van-button round block type="primary" native-type="submit"
+          >提交</van-button
+        ><br />
+        <van-button round block type="primary" @click="handleV3"
+          >v3 token</van-button
+        >
       </div>
 
       <van-popup v-model:show="showPicker" round position="bottom">
@@ -87,7 +100,7 @@
 
       <van-popup v-model:show="showDatePicker" round position="bottom">
         <van-datetime-picker
-          v-model="[startDate,endDate][dateType]"
+          v-model="[startDate, endDate][dateType]"
           title="选择日期"
           type="date"
           :min-date="currentRange[0]"
@@ -101,18 +114,24 @@
 </template>
 
 <script setup lang="ts">
-import { getAccessToken, getCertToken, simpauth, gawzauthreq, nogawzauthreq } from '@/api/demo/index'
+import {
+  getAccessToken,
+  getCertToken,
+  simpauth,
+  gawzauthreq,
+  nogawzauthreq
+} from '@/api/demo/index'
 import { Toast } from 'vant'
 import { loadEnv, formatDate } from '@/utils/index'
 import { v3Sign, handleV3Event } from './v3crypt'
 
-const { VITE_CLIENT_ID, VITE_CLIENT_SECRET} = loadEnv()
+const { VITE_CLIENT_ID, VITE_CLIENT_SECRET } = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
 const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
 const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
-const mode = ref<number|string>(16) // 认证模式
-const defaultIndex = ref(modeRange.findIndex((item) => item===mode.value)) // 默认认证模式index
+const mode = ref<number | string>(16) // 认证模式
+const defaultIndex = ref(modeRange.findIndex(item => item === mode.value)) // 默认认证模式index
 const username = ref('') // 姓名
 const idNum = ref('') // 证件号码
 const showDatePicker = ref(false) // 日期选择器弹出层
@@ -127,13 +146,13 @@ const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小�
 const authModeChecked = ref('2') // 选择跳转目的地
 
 // 选择模式
-const onConfirmMode = (data:number) => {
+const onConfirmMode = (data: number) => {
   mode.value = data
   showPicker.value = false
 }
 
 // 选择日期
-const onConfirmDate = (value:Date) => {
+const onConfirmDate = (value: Date) => {
   if (!dateType.value) startDate.value = value
   else endDate.value = value
   showDatePicker.value = false
@@ -142,11 +161,19 @@ const onConfirmDate = (value:Date) => {
 // 格式化日期
 const startDateToString = computed(() => startDate.value.toLocaleDateString())
 const endDateToString = computed(() => endDate.value.toLocaleDateString())
-const currentRange = computed(() => [startDateRange, endDateRange][dateType.value])
+const currentRange = computed(
+  () => [startDateRange, endDateRange][dateType.value]
+)
 
 const handleSubmit = async () => {
-  let {accessToken} = await getAccessToken({clientId: clientId.value, clientSecret: clientSecret.value}) as unknown as {accessToken: string}
-  let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
+  let { accessToken } = (await getAccessToken({
+    clientId: clientId.value,
+    clientSecret: clientSecret.value
+  })) as unknown as { accessToken: string }
+  let foreBackUrl =
+    location.href.indexOf('?') === -1
+      ? location.href
+      : location.href.substring(0, location.href.indexOf('?'))
   let params = {
     accessToken,
     authType: 'GzhRegular',
@@ -163,19 +190,29 @@ const handleSubmit = async () => {
     }
   }
 
-  let {tokenInfo} = await getCertToken(params) as unknown as {tokenInfo: {certToken: string}}
-  let {certToken} = tokenInfo
+  let { tokenInfo } = (await getCertToken(params)) as unknown as {
+    tokenInfo: { certToken: string }
+  }
+  let { certToken } = tokenInfo
 
-  let target = Number(authModeChecked.value)
-  let url: string
-  if (target) { // 通过空白引导页指引跳转生活号或者小程序
-    let env = authModeList[target - 1]
+  const target = Number(authModeChecked.value)
+  let url = ''
+  if (target) {
+    // 通过空白引导页指引跳转生活号或者小程序
+    const env = authModeList[target - 1]
     const { MODE, VITE_DEMO_BASE_URL } = loadEnv()
-    let domain = `${MODE === 'production' ? VITE_DEMO_BASE_URL : 'https://sfrz.wsbs.shxga.gov.cn'}`
+    const domain = `${
+      MODE === 'production'
+        ? VITE_DEMO_BASE_URL
+        : 'https://sfrz.wsbs.shxga.gov.cn'
+    }`
     url = `${domain}/authgzh/auth?certToken=${certToken}&env=${env}`
-  } else { // 直接跳转生活号
+  } else {
+    // 直接跳转生活号
     const { MODE, VITE_AUTH_BASE_URL, VITE_PROXY_AUTH_BASE_URL } = loadEnv()
-    let domain = `${MODE === 'production' ? VITE_AUTH_BASE_URL : VITE_PROXY_AUTH_BASE_URL}`
+    const domain = `${
+      MODE === 'production' ? VITE_AUTH_BASE_URL : VITE_PROXY_AUTH_BASE_URL
+    }`
     url = `${domain}/auth?certToken=${certToken}`
   }
   window.location.replace(url)
@@ -183,52 +220,65 @@ const handleSubmit = async () => {
 
 // 网证标识
 const handleV3 = async () => {
-  // let foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
-  let foreBackUrl = 'https://sfrz.wsbs.shxga.gov.cn/sit/shanxiauthweb/transfer.html'
+  // const foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
+  const foreBackUrl =
+    'https://sfrz.wsbs.shxga.gov.cn/sit/shanxiauthweb/transfer.html'
   let certToken = ''
-  if (!username.value || !idNum.value) { // 不存在用户录入的明文信息
-    let encryptParams = v3Sign({
-      mode: mode.value,
-      authType: 'GzhRegular',
-      businessInfo: {
-        subject: '身份验证'
+  if (!username.value || !idNum.value) {
+    // 不存在用户录入的明文信息
+    let encryptParams = v3Sign(
+      {
+        mode: mode.value,
+        authType: 'GzhRegular',
+        businessInfo: {
+          subject: '身份验证'
+        },
+        extraParams: {
+          foreBackUrl
+        }
       },
-      extraParams: {
-        foreBackUrl
-      }
-    }, clientId.value) // 1.数据签名
+      clientId.value
+    ) // 1.数据签名
     let resData = await nogawzauthreq(encryptParams) // 2.提交签名后的数据
     let result = handleV3Event(resData) // 统一处理后续操作
     certToken = result.certToken
   } else {
-    let encryptParams = v3Sign({
-      authData: {
-        mode: 64,
-        idInfo: {
-          fullName: username.value,
-          idNum: idNum.value
+    let encryptParams = v3Sign(
+      {
+        authData: {
+          mode: 64,
+          idInfo: {
+            fullName: username.value,
+            idNum: idNum.value
+          }
         }
-      }
-    }, clientId.value) // 1.数据签名
+      },
+      clientId.value
+    ) // 1.数据签名
     let resData = await simpauth(encryptParams) // 2.提交签名后的数据
     let result = handleV3Event(resData) // 统一处理后续操作
     const gawzbz = result.gawzbz // 3.获得公安网证标识
 
-    encryptParams = v3Sign({
-      mode: mode.value,
-      authType: 'GzhRegular',
-      idInfo: {
-        gawzbz,
-        idStartDate: (username.value&&idNum.value) ? formatDate(startDate.value) : '', // 没有录入用户信息，不传证件有效期
-        idEndDate: (username.value&&idNum.value) ? formatDate(endDate.value): ''
+    encryptParams = v3Sign(
+      {
+        mode: mode.value,
+        authType: 'GzhRegular',
+        idInfo: {
+          gawzbz,
+          idStartDate:
+            username.value && idNum.value ? formatDate(startDate.value) : '', // 没有录入用户信息，不传证件有效期
+          idEndDate:
+            username.value && idNum.value ? formatDate(endDate.value) : ''
+        },
+        businessInfo: {
+          subject: '身份验证'
+        },
+        extraParams: {
+          foreBackUrl
+        }
       },
-      businessInfo: {
-        subject: '身份验证'
-      },
-      extraParams: {
-        foreBackUrl
-      }
-    }, clientId.value) // 5.数据签名
+      clientId.value
+    ) // 5.数据签名
     resData = await gawzauthreq(encryptParams) // 4.提交签名后的数据
     result = handleV3Event(resData) // 统一处理后续操作
     certToken = result.certToken // 5.获得certToken
@@ -239,11 +289,11 @@ const handleV3 = async () => {
       ? import.meta.env.VITE_AUTH_BASE_URL
       : import.meta.env.VITE_PROXY_AUTH_BASE_URL
   }`
-  return window.location.href = `${domain}/auth?certToken=${certToken}`
+  return (window.location.href = `${domain}/auth?certToken=${certToken}`)
 }
 
 // 格式化日期选择器显示
-const formatterDate = (type:string, value:string) => {
+const formatterDate = (type: string, value: string) => {
   if (type === 'year') {
     return `${value}年`
   }
@@ -261,12 +311,12 @@ onMounted(() => {
   let query = href.substring(href.indexOf('?') + 1)
   const urlParams = new URLSearchParams(query)
   const errorMsg = urlParams.get('errorMsg')
-  if (errorMsg) return Toast({
-    message: `认证${errorMsg}`,
-    forbidClick: true,
-  })
+  if (errorMsg)
+    return Toast({
+      message: `认证${errorMsg}`,
+      forbidClick: true
+    })
 })
-
 </script>
 
 <style lang="scss">
@@ -278,18 +328,18 @@ onMounted(() => {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-h1{
+h1 {
   text-align: center;
 }
-.radio-box{
-  padding: 10px 30px
+.radio-box {
+  padding: 10px 30px;
 }
-.radio-title{
+.radio-title {
   font-size: 14px;
   color: #666;
   padding: 10px 0;
 }
-.van-radio{
+.van-radio {
   padding: 10px 0;
 }
 </style>

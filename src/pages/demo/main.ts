@@ -3,7 +3,18 @@ import App from './index.vue'
 
 import 'normalize.css/normalize.css'
 
-import { Button, Form, Field, CellGroup, RadioGroup, Radio, Picker, Popup, DatetimePicker, Divider } from 'vant'
+import {
+  Button,
+  Form,
+  Field,
+  CellGroup,
+  RadioGroup,
+  Radio,
+  Picker,
+  Popup,
+  DatetimePicker,
+  Divider,
+} from 'vant'
 
 createApp(App)
   .use(Button)

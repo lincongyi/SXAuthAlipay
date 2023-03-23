@@ -3,7 +3,16 @@ import App from './index.vue'
 
 import 'normalize.css/normalize.css'
 
-import { Loading, Image as VanImage, Button, Icon, RadioGroup, Radio, Overlay, Divider } from 'vant'
+import {
+  Loading,
+  Image as VanImage,
+  Button,
+  Icon,
+  RadioGroup,
+  Radio,
+  Overlay,
+  Divider,
+} from 'vant'
 
 createApp(App)
   .use(Loading)

@@ -4,10 +4,12 @@
       <van-image class="result-image" :src="resultList[authResult].resultImage">
         <template v-slot:error>加载失败</template>
       </van-image>
-      <div class="description">{{resultList[authResult].resultTxt}}</div>
+      <div class="description">{{ resultList[authResult].resultTxt }}</div>
     </div>
-    <template v-for="(item,index) in authResultStep" :key="index">
-      <div :class="['step',['failed','successful'][item.value]]">{{item.key}}</div>
+    <template v-for="(item, index) in authResultStep" :key="index">
+      <div :class="['step', ['failed', 'successful'][item.value]]">
+        {{ item.key }}
+      </div>
     </template>
     <div class="btn-wrap">
       <van-button type="primary" block @click="handleBack">返回</van-button>
@@ -30,7 +32,7 @@ const modeList = [
   },
   {
     mode: [18, 66], // 18,66模式校验前2项
-    type: 2,
+    type: 2
   }
 ]
 const resultList = [
@@ -41,7 +43,7 @@ const resultList = [
   {
     resultTxt: '认证失败',
     resultImage: certificationFailedImage
-  },
+  }
 ] as const
 const authMode = ref(0) // 认证模式
 const authData = ref('') // 认证结果
@@ -49,14 +51,14 @@ const authData = ref('') // 认证结果
 const authResultStep = computed(() => {
   // 认证结果：0-失败；1-成功；2-未校验
   let result = [
-    {key: '实名校验', value: 2},
-    {key: '人像比对', value: 2}
+    { key: '实名校验', value: 2 },
+    { key: '人像比对', value: 2 }
   ]
-  if (authMode.value){
-    let modeItem = modeList.find((item) => item.mode.includes(authMode.value))
+  if (authMode.value) {
+    let modeItem = modeList.find(item => item.mode.includes(authMode.value))
     let data = authData.value.slice(0, modeItem?.type)
-    for (let i=0;i<data.length;i++){
-      let value = Number(data[i])===0 ? 1:0
+    for (let i = 0; i < data.length; i++) {
+      let value = Number(data[i]) === 0 ? 1 : 0
       result[i].value = value
     }
   }
@@ -65,11 +67,11 @@ const authResultStep = computed(() => {
 
 // 认证结果：0-失败；1-成功；
 const authResult = computed(() => {
-  if (!authData.value){
+  if (!authData.value) {
     return 0
   } else {
-    let item = authResultStep.value.find((item) => !item.value)
-    return item ? 1:0
+    let item = authResultStep.value.find(item => !item.value)
+    return item ? 1 : 0
   }
 })
 
@@ -84,15 +86,20 @@ const handleBack = () => {
 }
 
 onMounted(() => {
-  let query = window.location.href.substring(window.location.href.indexOf('?')+1)
-  if (!query.includes('&')) return Dialog.alert({ message: '路径参数有错，请重新获取' })
+  let query = window.location.href.substring(
+    window.location.href.indexOf('?') + 1
+  )
+  if (!query.includes('&'))
+    return Dialog.alert({ message: '路径参数有错，请重新获取' })
 
   const authParams = query.substring(0, query.indexOf('&foreBackUrl'))
   const authParamsArr = authParams.split('&')
   authMode.value = Number(authParamsArr[0].replace(/mode=/g, ''))
   authData.value = authParamsArr[1].replace(/resStr=/g, '')
 
-  foreBackUrl.value = query.substring(query.indexOf('foreBackUrl')).replace(/foreBackUrl=/g, '')
+  foreBackUrl.value = query
+    .substring(query.indexOf('foreBackUrl'))
+    .replace(/foreBackUrl=/g, '')
   window.location.href = foreBackUrl.value
 })
 </script>
@@ -134,18 +141,18 @@ onMounted(() => {
     width: 28px;
     height: 28px;
     background-size: contain;
-    content: "";
+    content: '';
     vertical-align: middle;
-    background-image: url("https://s2.loli.net/2022/06/01/lXRhVtQTnGCf9Mq.png");
+    background-image: url('https://s2.loli.net/2022/06/01/lXRhVtQTnGCf9Mq.png');
     background-repeat: no-repeat;
   }
 
   &.failed::before {
-    background-image: url("https://s2.loli.net/2022/06/01/7nsJ8BPvbpg46cI.png");
+    background-image: url('https://s2.loli.net/2022/06/01/7nsJ8BPvbpg46cI.png');
   }
 
   &.successful::before {
-    background-image: url("https://s2.loli.net/2022/06/01/VawqsbHc6RhBAmT.png");
+    background-image: url('https://s2.loli.net/2022/06/01/VawqsbHc6RhBAmT.png');
   }
 }
 

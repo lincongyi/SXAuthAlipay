@@ -161,7 +161,7 @@ import {
   checkIdentityInfo,
   getBeforeAuthTips,
   alipayAuthInit,
-  alipayAuthQuery,
+  alipayAuthQuery
 } from '@/api/auth/index'
 import { Toast, Dialog } from 'vant'
 import { hideCode, getImageUrl } from '@/utils/index'
@@ -203,7 +203,7 @@ const isFilled = computed(() => fullName.value && idNum.value) // 用户名和�
 let url = window.location.href
 if (!url.includes('&')) {
   Dialog.alert({
-    message: '路径参数有错，请重新获取',
+    message: '路径参数有错，请重新获取'
   })
   setTimeout(() => {
     window.history.go(-1)
@@ -227,7 +227,7 @@ onMounted(async () => {
   // 校验certToken 或 userId 是否有绑定用户的信息
   let { data: identityInfo } = await checkIdentityInfo({
     loginToken,
-    certToken,
+    certToken
   })
 
   mode.value = identityInfo.mode
@@ -316,7 +316,7 @@ const toAuthorize = async () => {
       certToken,
       fullName: fullName.value,
       idNum: idNum.value,
-      mode: mode.value,
+      mode: mode.value
     }
     if (expirationDateMode.includes(mode.value)) {
       params.idStartDate = isFilledExpirationDate.value
@@ -334,7 +334,7 @@ const toAuthorize = async () => {
       loginToken,
       certToken,
       fullName: fullName.value,
-      idNum: idNum.value,
+      idNum: idNum.value
     }
     if (expirationDateMode.includes(mode.value)) {
       params.idStartDate = isFilledExpirationDate.value
@@ -379,7 +379,7 @@ const AuthProcess = (certifyId: string, url: string) => {
       'startBizService',
       {
         name: 'open-certify',
-        param: JSON.stringify(options),
+        param: JSON.stringify(options)
       },
       callback
     )
@@ -394,7 +394,7 @@ const AuthProcess = (certifyId: string, url: string) => {
     startAPVerify(
       {
         certifyId,
-        url,
+        url
       },
       async (verifyResult: any) => {
         if (!verifyResult.result) {
@@ -409,7 +409,7 @@ const AuthProcess = (certifyId: string, url: string) => {
             fullName: fullName.value,
             idNum: idNum.value,
             mode: mode.value,
-            certifyId: verifyResult.result.certifyId,
+            certifyId: verifyResult.result.certifyId
           }
           followUpEvent(params)
         }

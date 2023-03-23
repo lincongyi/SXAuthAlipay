@@ -3,7 +3,19 @@ import App from './index.vue'
 
 import 'normalize.css/normalize.css'
 
-import { Button, Form, Field, CellGroup, NumberKeyboard, ActionSheet, Divider, Checkbox, Image as VanImage, Popup, DatetimePicker } from 'vant'
+import {
+  Button,
+  Form,
+  Field,
+  CellGroup,
+  NumberKeyboard,
+  ActionSheet,
+  Divider,
+  Checkbox,
+  Image as VanImage,
+  Popup,
+  DatetimePicker,
+} from 'vant'
 
 // import VConsole from 'vconsole'
 // new VConsole()

@@ -206,18 +206,18 @@ let userData = reactive<TUserData>({}) // 接收后端返回的用户信息
 
 let authMode = reactive({
   certAnnexType: 0,
-  mode: '66',
+  mode: '66'
 })
 
 const authLevelList = [
   // 认证模式对应的认证等级
   { mode: 64, level: 'D' },
-  { mode: 66, level: 'C' },
+  { mode: 66, level: 'C' }
 ]
 
 const authLevel = computed(() => {
   let mode = Number(authMode.mode)
-  let result = authLevelList.find((item) => item.mode === mode)
+  let result = authLevelList.find(item => item.mode === mode)
   return result?.level
 })
 
@@ -229,8 +229,8 @@ const handleGetCertToken = async (cb?: () => void) => {
     ...authMode,
     businessExtraInfo: JSON.stringify({
       terminalUnit,
-      system: `${browser}/${version}`,
-    }),
+      system: `${browser}/${version}`
+    })
   })
   let { img, cert_token } = result.data
   certToken.value = cert_token
@@ -251,7 +251,7 @@ const getUserData = (cert_token: string) => {
     ws.send(
       JSON.stringify({
         flag: 'getCertCode',
-        cert_token,
+        cert_token
       })
     )
     // 保持webSocket的连接
@@ -312,7 +312,7 @@ const handleRefresh = () => {
   if (isForbidden.value) {
     return Toast({
       message: '请勿频繁刷新二维码',
-      forbidClick: true,
+      forbidClick: true
     })
   }
   refreshQrcode()

@@ -12,14 +12,18 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "types": [ "vite/client","node" ],
+    "types": ["vite/client", "node"],
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
       "@images/*": ["src/assets"]
-    },
-    "typeRoots": ["./node_modules/@types/", "./types"]
+    }
   },
-  "include": ["src/**/*.ts", "types/*.d.ts", "src/**/*.tsx", "src/**/*.vue","./auto-import.d.ts"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": [
+    "src/**/*.ts",
+    "types/*.d.ts",
+    "src/**/*.vue",
+    "./auto-import.d.ts"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

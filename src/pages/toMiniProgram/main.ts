@@ -5,6 +5,4 @@ import 'normalize.css/normalize.css'
 
 import { Loading } from 'vant'
 
-createApp(App)
-  .use(Loading)
-  .mount('#app')
+createApp(App).use(Loading).mount('#app')
