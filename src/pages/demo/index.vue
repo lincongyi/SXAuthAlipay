@@ -130,7 +130,8 @@ const clientId = ref(VITE_CLIENT_ID) // 账号
 const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
 const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
-const mode = ref<number | string>(16) // 认证模式
+type TMode = 16 | 18 | 64 | 66
+const mode = ref<TMode>(16) // 认证模式
 const defaultIndex = ref(modeRange.findIndex(item => item === mode.value)) // 默认认证模式index
 const username = ref('') // 姓名
 const idNum = ref('') // 证件号码
@@ -146,7 +147,7 @@ const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小�
 const authModeChecked = ref('2') // 选择跳转目的地
 
 // 选择模式
-const onConfirmMode = (data: number) => {
+const onConfirmMode = (data: TMode) => {
   mode.value = data
   showPicker.value = false
 }
@@ -159,8 +160,12 @@ const onConfirmDate = (value: Date) => {
 }
 
 // 格式化日期
-const startDateToString = computed(() => startDate.value.toLocaleDateString())
-const endDateToString = computed(() => endDate.value.toLocaleDateString())
+const startDateToString = computed(() =>
+  startDate.value ? startDate.value.toLocaleDateString() : ''
+)
+const endDateToString = computed(() =>
+  endDate.value ? endDate.value.toLocaleDateString() : ''
+)
 const currentRange = computed(
   () => [startDateRange, endDateRange][dateType.value]
 )
@@ -187,6 +192,16 @@ const handleSubmit = async () => {
     idInfo: {
       fullName: username.value,
       idNum: idNum.value
+    }
+  }
+
+  if ([16, 18].includes(Number(mode.value)) && username.value && idNum.value) {
+    params.idInfo = {
+      ...params.idInfo,
+      ...{
+        idStartDate: formatDate(startDate.value),
+        idEndDate: formatDate(endDate.value)
+      }
     }
   }
 

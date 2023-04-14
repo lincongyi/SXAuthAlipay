@@ -9,11 +9,11 @@ import { Dialog } from 'vant'
 import { loadEnv } from '@/utils/index'
 
 // 判断当前浏览器环境
-let userAgent = window.navigator.userAgent
+const userAgent = window.navigator.userAgent
 let navigatorMode = 0
 if (/micromessenger/.test(userAgent.toLowerCase())) {
   navigatorMode = 1
-} else if (/AlipayClient/.test(window.navigator.userAgent)) {
+} else if (/AlipayClient/.test(userAgent)) {
   navigatorMode = 2
 }
 if (!navigatorMode) {
@@ -24,13 +24,13 @@ if (!navigatorMode) {
     window.history.go(-1)
   })
 } else {
-  let href = decodeURIComponent(window.location.href)
-  let query = href.substring(href.indexOf('?') + 1)
+  const href = decodeURIComponent(window.location.href)
+  const query = href.substring(href.indexOf('?') + 1)
   const urlParams = new URLSearchParams(query)
   const foreBackUrl = urlParams.get('foreBackUrl')
   if (foreBackUrl) {
     // 小程序认证后返回，指定跳转回第三方h5页面
-    let url = query
+    const url = query
       .substring(query.indexOf('foreBackUrl'))
       .replace(/foreBackUrl=/g, '')
     window.location.href = url
@@ -39,8 +39,8 @@ if (!navigatorMode) {
     const env = urlParams.get('env') || ''
     const certToken = urlParams.get('certToken') || ''
 
-    let authModeList = ['H5', 'MINI'] as const
-    let authMode = authModeList.findIndex(item => item === env)
+    const authModeList = ['H5', 'MINI']
+    const authMode = authModeList.findIndex(item => item === env)
 
     if (navigatorMode === 1) {
       if (authMode) {
@@ -51,7 +51,7 @@ if (!navigatorMode) {
     } else {
       if (authMode) {
         // 跳转支付宝小程序
-        let schemeQuery = `certToken=${certToken}&env=${env}`
+        const schemeQuery = `certToken=${certToken}&env=${env}`
         const encodeSchemeQuery = encodeURIComponent(schemeQuery)
         const baseScheme =
           'alipays://platformapi/startapp?appId=2021003128635520&page=pages/login/index'
@@ -62,7 +62,7 @@ if (!navigatorMode) {
       } else {
         // 跳转支付宝生活号
         const { MODE, VITE_AUTH_BASE_URL, VITE_PROXY_AUTH_BASE_URL } = loadEnv()
-        let url = `${
+        const url = `${
           MODE === 'production' ? VITE_AUTH_BASE_URL : VITE_PROXY_AUTH_BASE_URL
         }/auth?certToken=${certToken}`
         window.location.href = url

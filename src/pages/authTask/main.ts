@@ -9,9 +9,11 @@ import {
   Button,
   Icon,
   RadioGroup,
+  CellGroup,
+  Cell,
   Radio,
   Overlay,
-  Divider,
+  Divider
 } from 'vant'
 
 createApp(App)
@@ -20,6 +22,8 @@ createApp(App)
   .use(Button)
   .use(Icon)
   .use(RadioGroup)
+  .use(CellGroup)
+  .use(Cell)
   .use(Radio)
   .use(Overlay)
   .use(Divider)

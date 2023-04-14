@@ -21,15 +21,55 @@
         <van-icon name="replay" />
         刷新or生成二维码
       </div>
-      <van-radio-group
-        v-model="authMode.mode"
-        direction="horizontal"
-        @change="refreshQrcode"
-      >
+      <!-- <van-radio-group v-model="authMode.mode" @change="refreshQrcode">
         <van-radio name="64">实名</van-radio>
         <van-radio name="66">实名+实人</van-radio>
+        <van-radio name="16">实名+证件有效期</van-radio>
+        <van-radio name="18">实名+实人+证件有效期</van-radio>
+      </van-radio-group> -->
+      <van-radio-group v-model="authMode.mode" @change="refreshQrcode">
+        <van-cell-group inset class="mg0">
+          <van-cell
+            title="64模式（实名）"
+            clickable
+            @click="authMode.mode = '64'"
+          >
+            <template #right-icon>
+              <van-radio name="64" />
+            </template>
+          </van-cell>
+
+          <van-cell
+            title="66模式（实名+实人）"
+            clickable
+            @click="authMode.mode = '66'"
+          >
+            <template #right-icon>
+              <van-radio name="66" />
+            </template>
+          </van-cell>
+
+          <van-cell
+            title="16模式（实名+证件有效期）"
+            clickable
+            @click="authMode.mode = '16'"
+          >
+            <template #right-icon>
+              <van-radio name="16" />
+            </template>
+          </van-cell>
+
+          <van-cell
+            title="18模式（实名+实人+证件有效期）"
+            clickable
+            @click="authMode.mode = '18'"
+          >
+            <template #right-icon>
+              <van-radio name="18" />
+            </template>
+          </van-cell>
+        </van-cell-group>
       </van-radio-group>
-      <div class="tips">请使用陕西公民实人认证小程序扫码认证</div>
     </div>
   </div>
   <van-overlay :show="isOverlayShow">
@@ -212,7 +252,9 @@ let authMode = reactive({
 const authLevelList = [
   // 认证模式对应的认证等级
   { mode: 64, level: 'D' },
-  { mode: 66, level: 'C' }
+  { mode: 66, level: 'C' },
+  { mode: 16, level: 'A' },
+  { mode: 18, level: 'B' }
 ]
 
 const authLevel = computed(() => {
