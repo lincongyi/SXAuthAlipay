@@ -17,32 +17,32 @@ export default ({ mode }) =>
         eslintrc: {
           enabled: false, // Default `false`
           filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
-          globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+          globalsPropValue: true // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
         },
-        dts: './auto-import.d.ts',
+        dts: './auto-import.d.ts'
       }),
       viteVConsole({
         entry: [
           path.resolve('src/main.ts'),
           // path.resolve('src/pages/demo/main.ts'),
-          path.resolve('src/pages/authResult/main.ts'),
+          path.resolve('src/pages/authResult/main.ts')
         ], // entry for each page, different from the above
         localEnabled: mode === 'development',
         enabled: mode === 'development',
         config: {
           maxLogNumber: 1000,
-          theme: 'dark',
-        },
+          theme: 'dark'
+        }
       }),
       styleImport({
-        resolves: [VantResolve()],
-      }),
+        resolves: [VantResolve()]
+      })
     ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        '@images': path.resolve(__dirname, './src/assets'),
-      },
+        '@images': path.resolve(__dirname, './src/assets')
+      }
     },
     build: {
       rollupOptions: {
@@ -52,31 +52,32 @@ export default ({ mode }) =>
           auth: path.resolve(__dirname, 'auth.html'),
           toMiniProgram: path.resolve(__dirname, 'toMiniProgram.html'),
           authResult: path.resolve(__dirname, 'authResult.html'),
-          authTask: path.resolve(__dirname, 'authTask.html'),
-        },
-      },
+          authTask: path.resolve(__dirname, 'authTask.html')
+        }
+      }
     },
     server: {
       host: '0.0.0.0',
+      port: Number(loadEnv(mode, process.cwd()).VITE_PORT),
       proxy: {
         // 第三方demo请求专用
         [loadEnv(mode, process.cwd()).VITE_DEMO_BASE_URL]: {
           target: loadEnv(mode, process.cwd()).VITE_PROXY_DEMO_BASE_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/bpi/, '/api'),
+          rewrite: path => path.replace(/^\/bpi/, '/api')
         },
         // 支付宝回调地址专用
         [loadEnv(mode, process.cwd()).VITE_AUTH_BASE_URL]: {
           target: loadEnv(mode, process.cwd()).VITE_PROXY_AUTH_BASE_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
+          rewrite: path => path.replace(/^\/api/, '')
         },
         // v3网证标识专用
         [loadEnv(mode, process.cwd()).VITE_V3_BASE_URL]: {
           target: loadEnv(mode, process.cwd()).VITE_PROXY_V3_BASE_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/cpi/, ''),
-        },
-      },
-    },
+          rewrite: path => path.replace(/^\/cpi/, '')
+        }
+      }
+    }
   })

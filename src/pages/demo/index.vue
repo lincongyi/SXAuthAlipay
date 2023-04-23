@@ -57,21 +57,29 @@
               }
             "
           />
-          <van-field
-            v-model="endDateToString"
-            readonly
-            is-link
-            name="截止日期"
-            label="截止日期"
-            @click="
-              () => {
-                dateType = 1
-                showDatePicker = true
-              }
-            "
-          />
+          <template v-if="!isPermanent">
+            <van-field
+              v-model="endDateToString"
+              readonly
+              is-link
+              name="截止日期"
+              label="截止日期"
+              @click="
+                () => {
+                  dateType = 1
+                  showDatePicker = true
+                }
+              "
+            />
+          </template>
         </template>
+        <van-cell center title="是否长期有效">
+          <template #right-icon>
+            <van-switch v-model="isPermanent" size="24" />
+          </template>
+        </van-cell>
       </van-cell-group>
+
       <van-radio-group class="radio-box" v-model="authModeChecked">
         <div class="radio-title">直接跳转</div>
         <van-radio name="0">生活号</van-radio>
@@ -140,8 +148,8 @@ const showDatePicker = ref(false) // 日期选择器弹出层
 const dateType = ref(0) // 日期类型：0-起始日期；1-截止日期
 const startDateRange = [new Date(2000, 0, 1), new Date()]
 const endDateRange = [new Date(), new Date(2050, 11, 31)]
-const startDate = ref(new Date(2000, 0, 1))
-const endDate = ref(new Date(2030, 0, 1))
+const startDate = ref<Date | string>(new Date(2000, 0, 1))
+const endDate = ref<Date | string>(new Date(2030, 0, 1))
 
 const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
 const authModeChecked = ref('2') // 选择跳转目的地
@@ -161,14 +169,17 @@ const onConfirmDate = (value: Date) => {
 
 // 格式化日期
 const startDateToString = computed(() =>
-  startDate.value ? startDate.value.toLocaleDateString() : ''
+  startDate.value ? (startDate.value as Date).toLocaleDateString() : ''
 )
 const endDateToString = computed(() =>
-  endDate.value ? endDate.value.toLocaleDateString() : ''
+  isPermanent.value ? '00000000' : (endDate.value as Date).toLocaleDateString()
 )
 const currentRange = computed(
   () => [startDateRange, endDateRange][dateType.value]
 )
+
+// 是否长期有效
+const isPermanent = ref(false)
 
 const handleSubmit = async () => {
   let { accessToken } = (await getAccessToken({
@@ -199,8 +210,10 @@ const handleSubmit = async () => {
     params.idInfo = {
       ...params.idInfo,
       ...{
-        idStartDate: formatDate(startDate.value),
-        idEndDate: formatDate(endDate.value)
+        idStartDate: formatDate(startDate.value as Date),
+        idEndDate: isPermanent.value
+          ? '00000000'
+          : formatDate(endDate.value as Date)
       }
     }
   }
@@ -281,9 +294,13 @@ const handleV3 = async () => {
         idInfo: {
           gawzbz,
           idStartDate:
-            username.value && idNum.value ? formatDate(startDate.value) : '', // 没有录入用户信息，不传证件有效期
+            username.value && idNum.value
+              ? formatDate(startDate.value as Date)
+              : '', // 没有录入用户信息，不传证件有效期
           idEndDate:
-            username.value && idNum.value ? formatDate(endDate.value) : ''
+            username.value && idNum.value
+              ? formatDate(endDate.value as Date)
+              : ''
         },
         businessInfo: {
           subject: '身份验证'
