@@ -61,9 +61,9 @@
             />
             <van-field
               v-model="endDate"
-              name="起始日期"
-              label="起始日期"
-              placeholder="起始日期"
+              name="截止日期"
+              label="截止日期"
+              placeholder="截止日期"
               readonly
               maxlength="18"
             />
@@ -200,7 +200,7 @@ const currentRange = computed(
 )
 const isFilled = computed(() => fullName.value && idNum.value) // 用户名和证件号都填好才能提交
 
-let url = window.location.href
+const url = window.location.href
 if (!url.includes('&')) {
   Dialog.alert({
     message: '路径参数有错，请重新获取'
@@ -225,7 +225,7 @@ const certifyId = ref('')
 
 onMounted(async () => {
   // 校验certToken 或 userId 是否有绑定用户的信息
-  let { data: identityInfo } = await checkIdentityInfo({
+  const { data: identityInfo } = await checkIdentityInfo({
     loginToken,
     certToken
   })
@@ -266,7 +266,7 @@ onMounted(async () => {
   }
 
   // 根据certToken获取认证前提示
-  let { data: authTips } = await getBeforeAuthTips({ certToken })
+  const { data: authTips } = await getBeforeAuthTips({ certToken })
   beforeAuth.value = authTips.beforeAuth
   beforeProtocol.value = authTips.beforeProtocol
   protocols.value = JSON.parse(authTips.protocols)[0]
@@ -372,7 +372,10 @@ const AuthProcess = (certifyId: string, url: string) => {
   // startBizService 接口仅在支付宝 10.0.15 及以上支持
   // 需要接入者自行做下版本兼容处理 ！！
   function startAPVerify(
-    options: object,
+    options: {
+      certifyId: string
+      url: string
+    },
     callback: (verifyResult: object) => Promise<void>
   ) {
     window.AlipayJSBridge.call(
@@ -403,13 +406,21 @@ const AuthProcess = (certifyId: string, url: string) => {
           // 认证结果回调触发, 以下处理逻辑为示例代码，开发者可根据自身业务特性来自行处理
           // 验证成功，接入方在此处处理后续的业务逻辑
           Toast(verifyResult.resultStatus === '9000' ? '认证通过' : '认证失败')
-          let params = {
+          let params: authorizeParams & { certifyId: string } = {
             loginToken,
             certToken,
             fullName: fullName.value,
             idNum: idNum.value,
             mode: mode.value,
             certifyId: verifyResult.result.certifyId
+          }
+          if (expirationDateMode.includes(mode.value)) {
+            params.idStartDate = isFilledExpirationDate.value
+              ? startDate.value
+              : formatDate(datePickerStartDate.value)
+            params.idEndDate = isFilledExpirationDate.value
+              ? endDate.value
+              : formatDate(datePickerEndDate.value)
           }
           followUpEvent(params)
         }

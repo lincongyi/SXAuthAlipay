@@ -18,6 +18,9 @@ import {
   Switch
 } from 'vant'
 
+// import VConsole from 'vconsole'
+// new VConsole()
+
 createApp(App)
   .use(Button)
   .use(Form)

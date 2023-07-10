@@ -14,7 +14,7 @@ import {
   Checkbox,
   Image as VanImage,
   Popup,
-  DatetimePicker,
+  DatetimePicker
 } from 'vant'
 
 // import VConsole from 'vconsole'
