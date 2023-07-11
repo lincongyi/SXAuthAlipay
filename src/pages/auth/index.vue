@@ -163,6 +163,7 @@ import {
   alipayAuthInit,
   alipayAuthQuery
 } from '@/api/auth/index'
+import type { TAuthorizeParams } from '@/api/auth/index'
 import { Toast, Dialog } from 'vant'
 import { hideCode, getImageUrl } from '@/utils/index'
 import { loadEnv, formatDate } from '@/utils/index'
@@ -245,7 +246,7 @@ onMounted(async () => {
 
     if (expirationDateMode.includes(mode.value)) {
       // 如果是16，18模式，需要反显或录入证件有效期
-      let { idStartDate, idEndDate } = identityInfo
+      const { idStartDate, idEndDate } = identityInfo
       if (idStartDate && idEndDate) {
         startDate.value = identityInfo.idStartDate
         endDate.value = identityInfo.idEndDate
@@ -255,7 +256,7 @@ onMounted(async () => {
 
     isFilledFullName.value = isFilledIdNum.value = true
     if (fullName.value && idNum.value) {
-      let { idStartDate, idEndDate } = identityInfo
+      const { idStartDate, idEndDate } = identityInfo
       if (
         expirationDateMode.includes(mode.value) &&
         (!idStartDate || !idEndDate)
@@ -297,21 +298,11 @@ const handleSubmit = () => {
   isActionSheetShow.value = true
 }
 
-type authorizeParams = {
-  loginToken: string
-  certToken: string
-  fullName: string
-  idNum: string
-  mode?: number
-  idStartDate?: string
-  idEndDate?: string
-}
-
 const toAuthorize = async () => {
   if (!isChecked.value) return Toast('请同意《服务协议》')
   if ([16, 64].includes(mode.value)) {
     // 16，64模式无需走活检流程
-    let params: authorizeParams = {
+    const params: TAuthorizeParams = {
       loginToken,
       certToken,
       fullName: fullName.value,
@@ -330,7 +321,7 @@ const toAuthorize = async () => {
     followUpEvent(params)
   } else {
     // 获取调起支付宝刷脸url
-    let params: authorizeParams = {
+    const params: TAuthorizeParams = {
       loginToken,
       certToken,
       fullName: fullName.value,
@@ -345,13 +336,26 @@ const toAuthorize = async () => {
         : formatDate(datePickerEndDate.value)
     }
 
-    let { data } = await alipayAuthInit(params)
+    const { data } = await alipayAuthInit(params)
     certifyId.value = data.certifyId || ''
     certifyUrl.value = data.certifyUrl || ''
     isActionSheetShow.value = false
     isChecked.value = false
     AuthProcess(certifyId.value, certifyUrl.value)
   }
+}
+
+type TVerifyResult = {
+  result: {
+    certifyId: string
+  }
+  resultStatus: '9000' | '6002' | '6001' | '4000'
+  /*
+    9000	认证通过。
+    6002	网络异常。
+    6001	用户取消了业务流程，主动退出。
+    4000	业务异常。
+  */
 }
 
 // 身份认证文档
@@ -376,7 +380,7 @@ const AuthProcess = (certifyId: string, url: string) => {
       certifyId: string
       url: string
     },
-    callback: (verifyResult: object) => Promise<void>
+    callback: (verifyResult: TVerifyResult) => Promise<void>
   ) {
     window.AlipayJSBridge.call(
       'startBizService',
@@ -399,14 +403,14 @@ const AuthProcess = (certifyId: string, url: string) => {
         certifyId,
         url
       },
-      async (verifyResult: any) => {
+      async (verifyResult: TVerifyResult) => {
         if (!verifyResult.result) {
           toCancelAuthorize()
         } else {
           // 认证结果回调触发, 以下处理逻辑为示例代码，开发者可根据自身业务特性来自行处理
           // 验证成功，接入方在此处处理后续的业务逻辑
           Toast(verifyResult.resultStatus === '9000' ? '认证通过' : '认证失败')
-          let params: authorizeParams & { certifyId: string } = {
+          const params: TAuthorizeParams = {
             loginToken,
             certToken,
             fullName: fullName.value,
@@ -433,8 +437,8 @@ const AuthProcess = (certifyId: string, url: string) => {
 }
 
 // 获取认证结果，并根据foreBackUrl返回
-const followUpEvent = async (params: object) => {
-  let { data } = await alipayAuthQuery(params)
+const followUpEvent = async (params: TAuthorizeParams) => {
+  const { data } = await alipayAuthQuery(params)
   setTimeout(() => {
     window.location.replace(data.foreBackUrl)
   }, 1000)
