@@ -82,11 +82,10 @@
 
       <van-radio-group class="radio-box" v-model="authModeChecked">
         <div class="radio-title">直接跳转</div>
-        <van-radio name="0">生活号</van-radio>
+        <van-radio name="0">生活号 or 公众号</van-radio>
 
-        <div class="radio-title">跳转空白页面后重定向</div>
-        <van-radio name="1">生活号</van-radio>
-        <van-radio name="2">MINI PROGRAM</van-radio>
+        <div class="radio-title">通过引导页面重定向到</div>
+        <van-radio name="1">MINI PROGRAM</van-radio>
       </van-radio-group>
       <div style="margin: 16px">
         <van-button round block type="primary" native-type="submit"
@@ -130,8 +129,10 @@ import {
   nogawzauthreq
 } from '@/api/demo/index'
 import { Toast } from 'vant'
-import { loadEnv, formatDate } from '@/utils/index'
+import { loadEnv, formatDate, getNavigatorInfo } from '@/utils/index'
 import { v3Sign, handleV3Event } from './v3crypt'
+
+const navigatorInfo = getNavigatorInfo()
 
 const { VITE_CLIENT_ID, VITE_CLIENT_SECRET } = loadEnv()
 const clientId = ref(VITE_CLIENT_ID) // 账号
@@ -139,7 +140,7 @@ const clientSecret = ref(VITE_CLIENT_SECRET) // 密码
 const showPicker = ref(false) // 认证模式弹出层
 const modeRange = [16, 18, 64, 66] // 认证模式范围
 type TMode = 16 | 18 | 64 | 66
-const mode = ref<TMode>(16) // 认证模式
+const mode = ref<TMode>(66) // 认证模式
 const defaultIndex = ref(modeRange.findIndex(item => item === mode.value)) // 默认认证模式index
 const username = ref('') // 姓名
 const idNum = ref('') // 证件号码
@@ -151,8 +152,7 @@ const endDateRange = [new Date(), new Date(2050, 11, 31)]
 const startDate = ref<Date | string>(new Date(2000, 0, 1))
 const endDate = ref<Date | string>(new Date(2030, 0, 1))
 
-const authModeList = ['H5', 'MINI'] as const // H5（生活号） or MINI（小程序）
-const authModeChecked = ref('2') // 选择跳转目的地
+const authModeChecked = ref('0') // 选择跳转目的地：0-生活号；1-小程序
 
 // 选择模式
 const onConfirmMode = (data: TMode) => {
@@ -181,16 +181,19 @@ const currentRange = computed(
 // 是否长期有效
 const isPermanent = ref(false)
 
+/**
+ * 确认授权
+ */
 const handleSubmit = async () => {
-  let { accessToken } = (await getAccessToken({
+  const { accessToken } = await getAccessToken({
     clientId: clientId.value,
     clientSecret: clientSecret.value
-  })) as unknown as { accessToken: string }
-  let foreBackUrl =
+  })
+  const foreBackUrl =
     location.href.indexOf('?') === -1
       ? location.href
       : location.href.substring(0, location.href.indexOf('?'))
-  let params = {
+  const params = {
     accessToken,
     authType: 'GzhRegular',
     mode: mode.value,
@@ -218,35 +221,41 @@ const handleSubmit = async () => {
     }
   }
 
-  let { tokenInfo } = (await getCertToken(params)) as unknown as {
-    tokenInfo: { certToken: string }
-  }
-  let { certToken } = tokenInfo
+  const { tokenInfo } = await getCertToken(params)
+  const { certToken } = tokenInfo
 
-  const target = Number(authModeChecked.value)
-  let url = ''
-  if (target) {
+  if (!Number(authModeChecked.value)) {
+    if (navigatorInfo.isWX) {
+      // 直接跳转公众号
+      const url = `https://sfrz.wsbs.shxga.gov.cn/authgzh/auth?certToken=${certToken}`
+      window.location.href = url
+    } else {
+      // 直接跳转生活号
+      const { MODE, VITE_AUTH_BASE_URL, VITE_PROXY_AUTH_BASE_URL } = loadEnv()
+      const domain = `${
+        ['production', 'release'].includes(MODE)
+          ? VITE_AUTH_BASE_URL
+          : VITE_PROXY_AUTH_BASE_URL
+      }`
+      const url = `${domain}/auth?certToken=${certToken}`
+      window.location.href = url
+    }
+  } else {
     // 通过空白引导页指引跳转生活号或者小程序
-    const env = authModeList[target - 1]
     const { MODE, VITE_DEMO_BASE_URL } = loadEnv()
     const domain = `${
-      MODE === 'production'
+      ['production', 'release'].includes(MODE)
         ? VITE_DEMO_BASE_URL
         : 'https://sfrz.wsbs.shxga.gov.cn'
     }`
-    url = `${domain}/authgzh/auth?certToken=${certToken}&env=${env}`
-  } else {
-    // 直接跳转生活号
-    const { MODE, VITE_AUTH_BASE_URL, VITE_PROXY_AUTH_BASE_URL } = loadEnv()
-    const domain = `${
-      MODE === 'production' ? VITE_AUTH_BASE_URL : VITE_PROXY_AUTH_BASE_URL
-    }`
-    url = `${domain}/auth?certToken=${certToken}`
+    const url = `${domain}/authgzh/auth?certToken=${certToken}&env=MINI`
+    window.location.replace(url)
   }
-  window.location.replace(url)
 }
 
-// 网证标识
+/**
+ * 网证标识
+ */
 const handleV3 = async () => {
   // const foreBackUrl = location.href.indexOf('?') === -1 ? location.href:location.href.substring(0, location.href.indexOf('?'))
   const foreBackUrl =
@@ -324,7 +333,9 @@ const handleV3 = async () => {
   return (window.location.href = `${domain}/auth?certToken=${certToken}`)
 }
 
-// 格式化日期选择器显示
+/**
+ * 格式化日期选择器显示
+ */
 const formatterDate = (type: string, value: string) => {
   if (type === 'year') {
     return `${value}年`
@@ -339,8 +350,8 @@ const formatterDate = (type: string, value: string) => {
 }
 
 onMounted(() => {
-  let href = decodeURIComponent(window.location.href)
-  let query = href.substring(href.indexOf('?') + 1)
+  const href = decodeURIComponent(window.location.href)
+  const query = href.substring(href.indexOf('?') + 1)
   const urlParams = new URLSearchParams(query)
   const errorMsg = urlParams.get('errorMsg')
   if (errorMsg)

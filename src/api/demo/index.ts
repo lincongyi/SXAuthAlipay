@@ -6,13 +6,25 @@ const { VITE_DEMO_BASE_URL, VITE_V3_BASE_URL } = loadEnv()
 /**
  * 获取accessToken
  */
-export function getAccessToken (params?: object) {
+export function getAccessToken (params: {
+  clientId: string
+  clientSecret: string
+}) {
   return request({
     baseURL: VITE_DEMO_BASE_URL,
     url: '/getaccesstoken',
     method: 'get',
     params
-  })
+  }) as unknown as Promise<{
+    accessToken: string
+  }>
+}
+
+type TGetCertToken = {
+  tokenInfo: {
+    authType: 'GzhRegular' // 写死
+    certToken: string
+  }
 }
 
 /**
@@ -24,7 +36,7 @@ export function getCertToken (data?: object) {
     url: '/authreq',
     method: 'post',
     data
-  })
+  }) as unknown as Promise<TGetCertToken>
 }
 
 /**
