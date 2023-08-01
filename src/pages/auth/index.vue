@@ -2,124 +2,48 @@
   <div class="form-wrap">
     <van-form>
       <van-cell-group inset>
-        <van-field
-          model-value="第二代居民身份证"
-          readonly
-          name="证件类型"
-          label="证件类型"
-        />
+        <van-field model-value="第二代居民身份证" readonly name="证件类型" label="证件类型" />
         <template v-if="isFilledFullName">
-          <van-field
-            v-model="fullNameFormat"
-            name="用户名"
-            label="用户名"
-            placeholder="用户名"
-            readonly
-            maxlength="18"
-          />
+          <van-field v-model="fullNameFormat" name="用户名" label="用户名" placeholder="用户名" readonly maxlength="18" />
         </template>
         <template v-else>
-          <van-field
-            v-model="fullName"
-            name="用户名"
-            label="用户名"
-            placeholder="用户名"
-            clearable
-            maxlength="18"
-            :rules="[{ required: true, message: '请填写用户名' }]"
-          />
+          <van-field v-model="fullName" name="用户名" label="用户名" placeholder="用户名" clearable maxlength="18"
+            :rules="[{ required: true, message: '请填写用户名' }]" />
         </template>
         <template v-if="isFilledIdNum">
-          <van-field
-            v-model="idNumFormat"
-            name="证件号码"
-            label="证件号码"
-            readonly
-            maxlength="18"
-            placeholder="证件号码"
-          />
+          <van-field v-model="idNumFormat" name="证件号码" label="证件号码" readonly maxlength="18" placeholder="证件号码" />
         </template>
         <template v-else>
-          <van-field
-            v-model="idNum"
-            name="证件号码"
-            label="证件号码"
-            maxlength="18"
-            placeholder="证件号码"
-            :rules="[{ required: true, message: '请填写证件号码' }]"
-          />
+          <van-field v-model="idNum" name="证件号码" label="证件号码" maxlength="18" placeholder="证件号码"
+            :rules="[{ required: true, message: '请填写证件号码' }]" />
         </template>
         <template v-if="expirationDateMode.includes(mode)">
           <template v-if="isFilledExpirationDate">
-            <van-field
-              v-model="startDate"
-              name="起始日期"
-              label="起始日期"
-              placeholder="起始日期"
-              readonly
-              maxlength="18"
-            />
-            <van-field
-              v-model="endDate"
-              name="截止日期"
-              label="截止日期"
-              placeholder="截止日期"
-              readonly
-              maxlength="18"
-            />
+            <van-field v-model="startDate" name="起始日期" label="起始日期" placeholder="起始日期" readonly maxlength="18" />
+            <van-field v-model="endDate" name="截止日期" label="截止日期" placeholder="截止日期" readonly maxlength="18" />
           </template>
           <template v-else>
-            <van-field
-              v-model="datePickerStartDateToString"
-              readonly
-              is-link
-              name="起始日期"
-              label="起始日期"
-              @click="
-                () => {
-                  dateType = 0
-                  showDatePicker = true
-                }
-              "
-            />
-            <van-field
-              v-model="datePickerEndDateToString"
-              readonly
-              is-link
-              name="截止日期"
-              label="截止日期"
-              @click="
-                () => {
-                  dateType = 1
-                  showDatePicker = true
-                }
-              "
-            />
+            <van-field v-model="datePickerStartDateToString" readonly is-link name="起始日期" label="起始日期" @click="() => {
+                dateType = 0
+                showDatePicker = true
+              }
+              " />
+            <van-field v-model="datePickerEndDateToString" readonly is-link name="截止日期" label="截止日期" @click="() => {
+                dateType = 1
+                showDatePicker = true
+              }
+              " />
           </template>
         </template>
       </van-cell-group>
 
       <van-popup v-model:show="showDatePicker" round position="bottom">
-        <van-datetime-picker
-          v-model="[datePickerStartDate, datePickerEndDate][dateType]"
-          title="选择日期"
-          type="date"
-          :min-date="currentRange[0]"
-          :max-date="currentRange[1]"
-          :formatter="formatterDate"
-          @confirm="onConfirmDate"
-        />
+        <van-datetime-picker v-model="[datePickerStartDate, datePickerEndDate][dateType]" title="选择日期" type="date"
+          :min-date="currentRange[0]" :max-date="currentRange[1]" :formatter="formatterDate" @confirm="onConfirmDate" />
       </van-popup>
 
       <div style="margin: 16px">
-        <van-button
-          square
-          block
-          type="primary"
-          :disabled="!isFilled"
-          @click="handleSubmit"
-          >提交</van-button
-        >
+        <van-button square block type="primary" :disabled="!isFilled" @click="handleSubmit">提交</van-button>
       </div>
       <div class="auth-logo">
         <van-image :src="getImageUrl('auth-logo')">
@@ -140,17 +64,11 @@
         <p class="text" @click="isChecked = !isChecked">
           <span v-html="beforeProtocol"></span>
           查看
-          <a
-            class="service-link"
-            @click.stop="toProtocols"
-            v-html="protocols.name"
-          ></a>
+          <a class="service-link" @click.stop="toProtocols" v-html="protocols.name"></a>
         </p>
       </div>
       <div class="btn-group">
-        <van-button block square type="primary" @click="toAuthorize"
-          >确认授权</van-button
-        >
+        <van-button block square type="primary" @click="toAuthorize">确认授权</van-button>
       </div>
     </div>
   </van-action-sheet>
@@ -468,22 +386,28 @@ const formatterDate = (type: string, value: string) => {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 h1 {
   text-align: center;
 }
+
 .content {
   margin: 20px;
+
   .upper-tips {
     line-height: 1.2;
     margin: 20px 0;
   }
+
   .center-tips {
     line-height: bold;
   }
+
   .lower-tips {
     font-size: 14px;
     display: flex;
     margin-bottom: 20px;
+
     .text {
       font-size: 12px;
       color: #999;
@@ -491,33 +415,41 @@ h1 {
       margin: 0;
       margin-left: 10px;
     }
+
     .service-link {
       color: #0a7aee;
     }
   }
 }
+
 .auth-logo {
   width: 50%;
   margin: 0 auto;
   margin-top: 40px;
 }
+
 .btn-group {
   display: flex;
   justify-content: space-around;
+
   .authorize-btn {
     flex: 1;
   }
+
   .to-authorize-btn {
     margin-left: 20px;
     opacity: 0.5;
+
     &.active {
       opacity: 1;
     }
   }
+
   .to-cancel-authorize-btn {
     margin-right: 20px;
   }
 }
+
 .van-toast {
   background-color: #000;
 }
