@@ -8,6 +8,11 @@ declare const wx: {
   miniProgram: object
 }
 
+declare const dd: {
+  getAuthCode: ({ corpId }: { corpId?: string }) => Promise
+  getConfig: () => Promise
+}
+
 interface ImportMetaEnv extends ViteEnv {
   __: unknown
 }

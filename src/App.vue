@@ -32,9 +32,10 @@ try {
  */
 const getAuthCode = (corpId?: string) => {
   try {
+    // eslint-disable-next-line no-undef
     dd.getAuthCode({
       corpId
-    }).then(res => {
+    }).then((res: any) => {
       console.log('res', res)
     })
   } catch (error) {
@@ -47,7 +48,8 @@ const getAuthCode = (corpId?: string) => {
  */
 const getConfig = () => {
   try {
-    dd.getConfig().then(res => {
+    // eslint-disable-next-line no-undef
+    dd.getConfig().then((res: any) => {
       console.log(res)
     })
   } catch (error) {
