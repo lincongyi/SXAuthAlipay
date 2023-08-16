@@ -2,7 +2,10 @@
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Hello Vue 3 + Vite" />
   <van-button type="primary" @click="toDemo">跳转到demo</van-button>
-  <van-button type="primary" plain @click="getAuthCode">获取登录授权码</van-button>
+  <br />
+  <van-button type="primary" plain @click="getAuthCode('')">获取登录授权码（不传租户id）</van-button>
+  <van-button type="primary" plain @click="getAuthCode('50696436')">获取登录授权码（传租户id）</van-button>
+  <van-button type="primary" plain @click="getConfig">获取配置信息</van-button>
 </template>
 
 <script setup lang="ts">
@@ -27,11 +30,10 @@ try {
 /**
  * 获取登录授权码
  */
-const getAuthCode = () => {
+const getAuthCode = (corpId?: string) => {
   try {
-    console.log('dd', dd)
     dd.getAuthCode({
-      corpId: ''
+      corpId
     }).then(res => {
       console.log('res', res)
     })
@@ -40,6 +42,18 @@ const getAuthCode = () => {
   }
 }
 
+/**
+ * 获取配置信息
+ */
+const getConfig = () => {
+  try {
+    dd.getConfig().then(res => {
+      console.log(res)
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 <style>
 #app {
