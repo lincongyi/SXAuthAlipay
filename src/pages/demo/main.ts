@@ -15,7 +15,7 @@ import {
   Popup,
   DatetimePicker,
   Divider,
-  Switch
+  Switch,
 } from 'vant'
 
 // import VConsole from 'vconsole'

@@ -10,12 +10,14 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from './components/HelloWorld.vue'
 
+import VConsole from 'vconsole'
+new VConsole()
+
 const toDemo = () => (window.location.href = './demo.html')
 
 const isAlipay = navigator.userAgent.indexOf('AliApp') > -1 // 是否支付宝环境
 let globalEnv: any
 try {
-  console.log(isAlipay)
   // eslint-disable-next-line no-undef
   globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获取实例对象
 } catch (error) {
