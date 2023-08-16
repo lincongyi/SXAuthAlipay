@@ -1,9 +1,8 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Hello Vue 3 + Vite" />
-  <van-button type="success" @click="toDemo">跳转到demo</van-button>
-  <van-button type="primary" @click="setParams">webView传参</van-button>
-  <van-button type="primary" @click="handleBack">小程序返回</van-button>
+  <van-button type="primary" @click="toDemo">跳转到demo</van-button>
+  <van-button type="primary" plain @click="getAuthCode">获取登录授权码</van-button>
 </template>
 
 <script setup lang="ts">
@@ -16,25 +15,29 @@ const toDemo = () => (window.location.href = './demo.html')
 const isAlipay = navigator.userAgent.indexOf('AliApp') > -1 // 是否支付宝环境
 let globalEnv: any
 try {
+  console.log(isAlipay)
   // eslint-disable-next-line no-undef
   globalEnv = isAlipay ? my : wx.miniProgram // h5 with 小程序通讯，获取实例对象
 } catch (error) {
   console.log(error)
 }
 
-const url = window.location.href
-const queryString = url.substring(url.indexOf('?') + 1)
-const params = new URLSearchParams(queryString)
-const certToken = params.get('certToken')
-
-const setParams = () => {
-  globalEnv.postMessage({ data: '测试webview通讯' })
+/**
+ * 获取登录授权码
+ */
+const getAuthCode = () => {
+  try {
+    console.log('dd', dd)
+    dd.getAuthCode({
+      corpId: ''
+    }).then(res => {
+      console.log('res', res)
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-const handleBack = () => {
-  globalEnv.postMessage({ data: '小程序返回' })
-  globalEnv.navigateBack({ delta: 1 })
-}
 </script>
 <style>
 #app {
